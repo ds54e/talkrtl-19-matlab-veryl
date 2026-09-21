@@ -1,0 +1,24 @@
+[project]
+name = "talkrtl_ldo"
+version = "0.1.0"
+
+# clock: 10 MHz nominal (100 ns period) in the testbench; edge/polarity are fixed
+# here so the generated SystemVerilog matches the contract:
+#   * posedge clock
+#   * synchronous, active-high reset
+# `reset_type = "sync_high"` makes Veryl's `if_reset` emit `if (rst)` inside
+# `always_ff @ (posedge clk)`, which is exactly CONTRACT §4's priority 1.
+#
+# omit_project_prefix: single-module project, so the generated module is named
+# `pgood_supervisor` (not `talkrtl_ldo_pgood_supervisor`). No namespace
+# collision is possible with one module, and the DUT name stays stable.
+#
+# exclude_std: this project uses no Veryl standard-library module; excluding it
+# keeps the generated file list to the files this verification actually checks.
+[build]
+sources = ["rtl/veryl"]
+target = {type = "directory", path = "results/generated/veryl"}
+clock_type = "posedge"
+reset_type = "sync_high"
+omit_project_prefix = true
+exclude_std = true

@@ -1,0 +1,39 @@
+# Local generated models/results (source scripts remain tracked)
+/model/generated/
+/results/generated/
+/tmp/
+/temp/
+slprj/
+codegen/
+*.slxc
+*.asv
+*.autosave
+*.m~
+*.mex*
+*.sldd.bak
+# HDL build/waves
+obj_dir/
+*.vcd
+*.fst
+*.wlf
+transcript
+target/
+build/
+.veryl/
+# Veryl may also write this cache dir and a root file list; the file list
+# holds checkout-dependent absolute paths, so it is regenerated, not committed.
+.build/
+/*.f
+# Local agent/auth/editor data
+.env
+.env.*
+!.env.example
+.kimi/
+.codex/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+.venv/

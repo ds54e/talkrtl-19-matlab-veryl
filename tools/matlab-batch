@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# WSL から Windows MATLAB を呼ぶ。MATLAB 本体の起動は実機で要確認。
+set -euo pipefail
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  printf '%s\n' 'Usage: bash tools/matlab-batch "MATLAB statement"' \
+    'MATLAB_EXE: optional MATLAB.exe path (WSL or Windows form).' \
+    'Default statement: addpath('"'matlab'"'); probe_environment'
+  exit 0
+fi
+if (( $# > 1 )); then
+  echo 'MATLAB statement は一つの引数として引用してください。' >&2; exit 2
+fi
+root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
+command -v wslpath >/dev/null || { echo 'WSL 上から実行してください: wslpath がありません。' >&2; exit 2; }
+command -v flock >/dev/null || { echo 'flock がありません。環境を報告してください。' >&2; exit 2; }
+exe=${MATLAB_EXE:-}
+if [[ -z "$exe" ]]; then
+  exe=$(command -v matlab.exe || true)
+fi
+if [[ -z "$exe" ]]; then
+  shopt -s nullglob
+  candidates=(/mnt/{c,d,e}/Program\ Files/MATLAB/R*/bin/matlab.exe)
+  shopt -u nullglob
+  if (( ${#candidates[@]} != 1 )); then
+    echo 'MATLAB を一意に選べません。候補を確認し MATLAB_EXE を指定してください。' >&2
+    if (( ${#candidates[@]} )); then printf '%s\n' "${candidates[@]}" >&2; fi
+    exit 2
+  fi
+  exe=${candidates[0]}
+fi
+case "$exe" in [A-Za-z]:*) exe=$(wslpath -u "$exe");; esac
+[[ -f "$exe" ]] || { echo "MATLAB executable がありません: $exe" >&2; exit 2; }
+win_root=$(wslpath -w "$root")
+case "$win_root" in
+  [A-Za-z]:\\*|[A-Za-z]:/*) ;;
+  *) echo 'MATLAB batch は Windows ドライブ上の checkout を使います。UNC/WSL 内部パスは未対応です。' >&2; exit 2;;
+esac
+out="$root/results/generated"
+mkdir -p -- "$out"
+exec 9>"$out/.matlab.lock"
+flock -n 9 || { echo 'この checkout の別の MATLAB batch が動作中です。' >&2; exit 3; }
+log="$out/matlab-$(date -u +%Y%m%dT%H%M%SZ)-$$.log"
+win_log=$(wslpath -w "$log")
+statement=${1:-"addpath('matlab'); probe_environment"}
+printf 'MATLAB: %s\nLog: %s\n' "$exe" "$log" >&2
+# -wait が終了待ちと終了コード受領に必要。eval/cmd.exe の多重引用は使わない。
+set +e
+"$exe" -wait -sd "$win_root" -logfile "$win_log" -batch "$statement"
+rc=$?
+set -e
+printf 'MATLAB exit status: %s\n' "$rc" >&2
+exit "$rc"
