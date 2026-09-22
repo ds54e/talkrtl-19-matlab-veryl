@@ -1,5 +1,4 @@
 function u = model_util()
-% モデル生成で共有する小さなhelper。block path/parameter名は実機で確認したものだけを使う。
 u.libblk = @libblk;
 u.addss = @addss;
 u.newsub = @newsub;
@@ -22,13 +21,11 @@ path = hits{1};
 end
 
 function blk = addss(container, lib, name, blkName, pos)
-% Simscape library block を container へ追加する。
 blk = [container '/' blkName];
 add_block(libblk(lib, name), blk, 'Position', pos);
 end
 
 function blk = newsub(sys, name, pos)
-% 内部が空の Subsystem を作る。
 blk = [sys '/' name];
 add_block('simulink/Ports & Subsystems/Subsystem', blk, 'Position', pos);
 lines = find_system(blk, 'FindAll', 'on', 'SearchDepth', 1, 'Type', 'line');
@@ -40,18 +37,15 @@ end
 end
 
 function h = p(container, blk, field, idx)
-% port handle を返す。
 h = get_param([container '/' blk], 'PortHandles').(field)(idx);
 end
 
 function conn(container, a, b)
-% 2つの port handle を結ぶ。
 add_line(container, a, b, 'autorouting', 'smart');
 end
 
 function conns(container, a, b)
-% 相対名で2つの port を結ぶ。subsystem の物理接続portは handle が遅延するため、
-% 外側の physical network は名前で結ぶ。
+% subsystem の physical port handle は遅延するため、外側の network は名前で結ぶ。
 add_line(container, a, b, 'autorouting', 'smart');
 end
 
@@ -82,13 +76,8 @@ h = get_param(subsys, 'PortHandles').LConn(n);
 end
 
 function blk = addpgcmp(sys, name, params, pos)
-% CONTRACT §3 の UV hysteresis comparator。Simulink primitive だけで構成し、
-% Stateflow / Stateflow Chart に依存しない。この comparator は Stateflow なしで成立する。
-%   rise = (vout > 0.87)   strict
-%   fall = (vout < 0.85)   strict
-%   next = rise || (prev && !fall)   prev = Memory(next), 初期値 0
-% 等値では rise/fall とも false なので prev を保持する。初期値は 0。
-% R2026a の Simulink Relay は等値で切替わるため、CONTRACT §3 の保持規則には使えない。
+% strict hysteresis: >0.87 で set、<0.85 で clear、等値は hold。
+% R2026a の Simulink Relay は等値で切り替わるため使わない。
 u = model_util();
 blk = u.newsub(sys, name, pos);
 add_block('simulink/Sources/In1', [blk '/vout'], 'Position', [20 120 50 150]);

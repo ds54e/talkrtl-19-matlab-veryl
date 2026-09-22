@@ -1,33 +1,4 @@
 #!/usr/bin/env bash
-# Run the reconstructed LDO system on Verilator -- the public OSS demo.
-#
-#   ./sim/run_verilator.sh
-#
-# Three simulations are built from the committed sources and run:
-#
-#   analog    rtl/rnm/pg_cmp_rnm.sv + rtl/rnm/ldo_rnm.sv + sim/rnm_core_tb.sv
-#             -> results/generated/verilator/rnm_nominal.csv, rnm_nominal_full.csv
-#   system    the same RNM plus the Veryl-generated supervisor
-#             (rtl/generated/veryl/pgood_supervisor.sv) + sim/system_nominal_tb.sv
-#             -> results/generated/verilator/system_nominal.csv
-#   apb       the integrated system: the RgGen-generated CSR
-#             (rtl/generated/rggen/ldo_csr.sv, compiled against the vendored
-#             runtime RTL in third_party/rggen-sv-rtl/) supplies `en` through a
-#             real APB transfer, with the same RNM + supervisor behind it
-#             + sim/apb_system_tb.sv -> results/generated/verilator/apb_system.csv
-#
-# The analog and system runs provide the implementation outputs that MATLAB
-# compares with the Simscape/Stateflow reference; the APB run shows the generated
-# CSR actually driving the system. Every testbench is self-checking: each prints
-# its PASS marker only when its own checks pass, and exits non-zero on failure.
-# MATLAB reads the CSVs directly from results/generated/verilator/.
-#
-# Verilator comes from PATH by default; override the binary with VERILATOR_BIN:
-#
-#   VERILATOR_BIN   default: verilator (resolved from PATH)
-#
-# exit 0 PASS / 1 run failed / 2 blocked (toolchain or source missing)
-
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -36,8 +7,6 @@ OUT="$ROOT/results/generated/verilator"
 
 blocked() { printf 'SIM_BLOCKED: %s\n' "$*" >&2; exit 2; }
 fail()    { printf 'SIM_FAIL: %s\n' "$*" >&2; exit 1; }
-
-# --- toolchain ---------------------------------------------------------------
 
 if [[ "$VERILATOR_BIN" == */* ]]; then
   [[ -x "$VERILATOR_BIN" ]] || blocked "VERILATOR_BIN is not executable: $VERILATOR_BIN"
@@ -48,25 +17,22 @@ for tool in g++ make; do
   command -v "$tool" >/dev/null 2>&1 || blocked "'$tool' is not on PATH"
 done
 
-# --- sources (committed; never regenerated here) -----------------------------
-
 RNM=("$ROOT/rtl/rnm/pg_cmp_rnm.sv" "$ROOT/rtl/rnm/ldo_rnm.sv")
 DUT="$ROOT/rtl/generated/veryl/pgood_supervisor.sv"
-# Vendored RgGen runtime RTL. `rggen_rtl_pkg.sv` must come first: the other files
-# use its typedefs. Provenance: third_party/rggen-sv-rtl/README.md.
-RGLIB=("$ROOT/third_party/rggen-sv-rtl/rggen_rtl_pkg.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_or_reducer.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_mux.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_bit_field_if.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_bit_field.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_register_if.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_address_decoder.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_register_common.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_default_register.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_bus_if.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_adapter_common.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_apb_if.sv"
-       "$ROOT/third_party/rggen-sv-rtl/rggen_apb_adapter.sv")
+# rggen_rtl_pkg.sv must precede the other RgGen RTL files.
+RGLIB=("$ROOT/rtl/rggen-sv-rtl/rggen_rtl_pkg.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_or_reducer.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_mux.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_bit_field_if.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_bit_field.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_register_if.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_address_decoder.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_register_common.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_default_register.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_bus_if.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_adapter_common.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_apb_if.sv"
+       "$ROOT/rtl/rggen-sv-rtl/rggen_apb_adapter.sv")
 CSR="$ROOT/rtl/generated/rggen/ldo_csr.sv"
 for f in "${RNM[@]}" "$DUT" "$CSR" "$ROOT/sim/rnm_core_tb.sv" \
          "$ROOT/sim/system_nominal_tb.sv" "$ROOT/sim/apb_master_bfm.sv" \
@@ -74,22 +40,10 @@ for f in "${RNM[@]}" "$DUT" "$CSR" "$ROOT/sim/rnm_core_tb.sv" \
   [[ -f "$f" ]] || blocked "missing source: ${f#"$ROOT"/}"
 done
 
-# OUT is owned entirely by this script: clear it so stale files from older
-# revisions cannot survive.
 rm -rf "$OUT"
 mkdir -p "$OUT/logs" "$OUT/build"
 printf 'SIM: %s\n' "$("$VERILATOR_BIN" --version 2>/dev/null | head -1)"
 printf 'SIM: results in %s (gitignored)\n' "${OUT#"$ROOT"/}"
-
-# --- helpers -----------------------------------------------------------------
-#
-# These flags are the ones this repository's Verilator runs were qualified with:
-#   --binary             compile and link an executable
-#   --timing             the testbenches advance time with #(dt_ns)
-#   --timescale 1ns/1ps  the RNM and supervisors declare no timescale
-#   -Wno-ZERODLY         #(dt_ns) is statically unknown; it is not #0
-#   -j 0                 build with all cores
-# -Wno-fatal is deliberately not used, so an unexpected warning stops the build.
 
 vbuild() {
   local tag="$1" top="$2" log="$OUT/logs/$1.build.log"
@@ -110,7 +64,7 @@ vbuild() {
   printf '  built %s\n' "$tag"
 }
 
-# The testbenches open their CSVs by relative path, so they run with $OUT as cwd.
+# Testbenches write CSVs relative to cwd.
 vrun() {
   local tag="$1" top="$2" marker="$3"
   shift 3
@@ -131,8 +85,6 @@ vrun() {
   printf '  PASS %s\n' "$tag"
   grep -E '^(RNM_CORE|SYSTEM_NOMINAL|APB_SYSTEM): ' "$log" | sed 's/^/    /'
 }
-
-# --- run ---------------------------------------------------------------------
 
 printf '\n=== analog: SV-RNM LDO, nominal 50 us scenario ===\n'
 vbuild rnm rnm_core_tb "${RNM[@]}" "$ROOT/sim/rnm_core_tb.sv" || exit 1

@@ -1,0 +1,17 @@
+register_blocks:
+  - name: ldo_csr
+    byte_size: 8
+    registers:
+      - name: ctrl
+        offset_address: 0x00
+        bit_fields:
+          - name: en
+            bit_assignment: { width: 1, lsb: 0 }
+            type: rw
+            initial_value: 0
+      - name: status
+        offset_address: 0x04
+        bit_fields:
+          - name: pgood
+            bit_assignment: { width: 1, lsb: 0 }
+            type: ro

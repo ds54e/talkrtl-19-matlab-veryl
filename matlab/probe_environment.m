@@ -1,6 +1,4 @@
 function report = probe_environment()
-% 公開デモに必要な製品 (MATLAB / Simulink / Simscape / Stateflow) と基本 Simulink 実行を確認する。
-% LDO/Stateflow の実行検証ではない。
 root = fileparts(fileparts(mfilename('fullpath')));
 out = fullfile(root, 'results', 'generated', 'preflight');
 if ~isfolder(out), mkdir(out); end

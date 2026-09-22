@@ -2,7 +2,7 @@
 # WSL から Windows MATLAB を呼ぶ。MATLAB 本体の起動は実機で要確認。
 set -euo pipefail
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-  printf '%s\n' 'Usage: bash tools/matlab-batch "MATLAB statement"' \
+  printf '%s\n' 'Usage: bash tools/matlab-batch.sh "MATLAB statement"' \
     'MATLAB_EXE: optional MATLAB.exe path (WSL or Windows form).' \
     'Default statement: addpath('"'matlab'"'); probe_environment'
   exit 0
@@ -43,7 +43,7 @@ log="$out/matlab-$(date -u +%Y%m%dT%H%M%SZ)-$$.log"
 win_log=$(wslpath -w "$log")
 statement=${1:-"addpath('matlab'); probe_environment"}
 printf 'MATLAB: %s\nLog: %s\n' "$exe" "$log" >&2
-# -wait が終了待ちと終了コード受領に必要。eval/cmd.exe の多重引用は使わない。
+# -wait is required to receive MATLAB's exit status.
 set +e
 "$exe" -wait -sd "$win_root" -logfile "$win_log" -batch "$statement"
 rc=$?

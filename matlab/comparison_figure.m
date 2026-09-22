@@ -1,11 +1,4 @@
 function info = comparison_figure(io)
-% comparison の発表用 figure を MATLAB で生成する。GUI 操作は要らない。
-% SDI session とは別に、スライドへそのまま貼れる overview 図を 1 枚作る。
-%
-%   overview.png     : 上段 vout (reference vs implementation)、下段
-%                      pg_cmp / pgood / en / load_hi を 1 signal 1 row の compact な
-%                      timing 表示で
-%
 % time shift も plot 用 smoothing もしない。
 s = io.paths();
 if ~isfolder(s.comparison_dir), mkdir(s.comparison_dir); end
@@ -28,11 +21,6 @@ t_s1 = a1n.time_ns / 1e3;
 c0 = [0.000 0.447 0.741];      % reference
 c1 = [0.850 0.325 0.098];      % implementation
 
-% ---------------- overview -----------------------------------------------
-% 上段 vout (reference vs implementation) を dominant に置き、その下へ digital /
-% stimulus を 1 signal 1 row の compact な timing 表示で積む。binary signal に
-% 広い縦幅は要らないので、各 row は vout panel よりずっと低くする。
-% solid = reference、dashed/dotted = implementation (vout panel の legend と同じ約束)。
 f1 = figure('Visible', 'off', 'Position', [100 100 1100 840], 'Color', 'w');
 
 AX_L = 0.072;                  % 全 panel 共通の左端 / 幅 (x 軸を揃える)
@@ -51,8 +39,6 @@ legend(ax_v, {'Reference: Simscape + Stateflow', 'Implementation: Verilator RNM 
     'Location', 'southeast');
 ylim(ax_v, [0 1.08]);
 
-% 1 signal = 1 row。{ylabel, reference trace, implementation trace}。en は reference
-% のみ (implementation と tick 厳密一致で重なるため 1 本にまとめる)。data は上と同じ column。
 rows = {
     'pg\_cmp',  {t_d0, d0.pg_cmp, '-', c0}, ...
                 {t_d1, d1.pg_cmp, '--', c1}

@@ -1,33 +1,7 @@
-// rnm_core_tb -- RNM-only testbench for the SV-RNM LDO.
-//
-// No Veryl, no RgGen, no CSR: this measures the analog model on its own before
-// anything is integrated with the supervisor. It writes one CSV row
-// per 100 ns tick, matching the reference tick grid (501 ticks over 50 us).
-//
-// Scenario timing belongs to the testbench/environment, never to the DUT:
-// `ldo_rnm` contains no time, no schedule and no scenario. This TB owns the
-// scenario used by this RNM-only run and hands the model one fixed step at a time.
-//
-// Scheduling. CONTRACT §4 fixes the per-tick order
-// as "environment update -> observation -> output record". One single `initial`
-// process drives the whole run: the analog steps, the `en`/`load_hi` update,
-// and the CSV record happen in program order, so the ordering is structural
-// rather than a delta-cycle accident. Nothing else writes `en`, `load_hi` or
-// the model state, so there is no same-time race to resolve.
-//
-// per tick k, at t = k*100 ns:
-//     N x step(h=DT)   advance exactly one tick of simulated time, using the
-//                      en/load_hi in force for the interval being integrated
-//     en/load_hi       environment input update for the new tick
-//     record           observation of vout/vfb/vctrl/ipass/pg_cmp
-//
-// The `h` passed to `step()` is DT = 10 ns for the nominal run. `DT_PS` remains
-// overridable for experiments; the DUT itself is step-size agnostic.
 module rnm_core_tb;
     timeunit 1ns;
     timeprecision 1ps;
 
-    // ---- scenario / setup, overridable by plusargs (nominal defaults) -------
     int  en_rise_ns   = 2000;    // CONTRACT §5 nominal: en rises at 2 us
     int  load_rise_ns = 25000;   // load_hi rises at 25 us
     int  load_fall_ns = 35000;   // load_hi falls at 35 us
@@ -66,8 +40,6 @@ module rnm_core_tb;
         .pg_cmp  (pg_cmp)
     );
 
-    // Environment stimulus. Event times are TB parameters; the DUT never sees
-    // them. `en_fall_ns == 0` disables the disable event.
     function automatic logic env_en(input int t_ns);
         if (en_fall_ns != 0 && t_ns >= en_fall_ns) return 1'b0;
         return (t_ns >= en_rise_ns);
@@ -94,10 +66,8 @@ module rnm_core_tb;
         $fwrite(fd, "%0d,%0d,%0d,%0d,%.17g,%.17g,%.17g,%.17g,%0d\n",
                 tick, tick*100, en, load_hi, vout, vfb, vctrl, ipass, pg_cmp);
 
-        // structural self-check: tick k must land exactly on k*100 ns
         check($realtime == tick*100.0, "tick time is exactly tick*100 ns");
 
-        // health (CONTRACT §6): no NaN/Inf, vout >= -1 uV, vout < 1.1 V
         if (vout != vout || vout > 1.0e30 || vout < -1.0e30) begin
             nan_or_inf = nan_or_inf + 1;
         end
@@ -141,15 +111,11 @@ module rnm_core_tb;
         check(fd != 0, "CSV opened for writing");
         $fwrite(fd, "tick,time_ns,en,load_hi,vout,vfb,vctrl,ipass,pg_cmp\n");
 
-        // Full step-resolution trajectory. The reference scalars (heavy-load
-        // minimum, means, peak) are 10 ns-resolution values of the fixed-step
-        // solver, so they can only be compared at the model's own step
-        // resolution -- the 100 ns tick grid is coarser than the reference.
+        // Full CSV stays on the model step grid; reference scalars are 10 ns-resolution.
         full_fd = $fopen(full_path, "w");
         check(full_fd != 0, "full CSV opened for writing");
         $fwrite(full_fd, "time_ns,vout,vctrl,pg_cmp\n");
 
-        // ---- cold start: initial condition, no integration yet -------------
         u_ldo.rst_state();
         en      = env_en(0);
         load_hi = env_lh(0);
@@ -157,16 +123,13 @@ module rnm_core_tb;
         record_step();
 
         for (int k = 1; k <= ntick; k++) begin
-            // environment update: advance the analog exactly one tick
             repeat (steps_per_tick) begin
                 u_ldo.step(dt_s);
                 #(dt_ns);
                 record_step();
             end
-            // environment input update for the new tick (before observation)
             en      = env_en(k*100);
             load_hi = env_lh(k*100);
-            // observation / output record
             record(k);
         end
 
@@ -179,7 +142,6 @@ module rnm_core_tb;
         check(nan_or_inf == 0, "no NaN/Inf in vout");
         check(bound_low == 0,  "vout never below -1 uV");
         check(bound_high == 0, "vout always below 1.1 V");
-        check(errors == 0,     "no accumulated errors");
 
         if (errors != 0) $fatal(1, "RNM_CORE_FAIL errors=%0d", errors);
         $display("RNM_CORE_PASS");
