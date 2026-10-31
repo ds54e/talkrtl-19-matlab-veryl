@@ -1,11 +1,11 @@
-RTLを語る会 #19 用のデモです。
+MATLABとVerylとRgGenとXezimで何かやってみるテスト
 
 1. LDOモデル作成：MATLAB / Simulink
 2. PGOOD監視ロジックのモデル作成：MATLAB / Stateflow
 3. PGOOD監視ロジックのRTL生成：Veryl
 4. APBレジスタのRTL生成：RgGen
 5. LDOモデル作成：SV-RNM
-6. SV-RNMとRTLを統合してシミュレーション：xezim
+6. SV-RNMとRTLを統合してシミュレーション：Xezim
 7. MATLABとxezimの波形比較：MATLAB / Simulation Data Inspector
 
 ![MATLABとSV-RNMの比較結果](figures/overview.png)
