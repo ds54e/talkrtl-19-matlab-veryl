@@ -12,7 +12,6 @@ codegen/
 *.mex*
 *.sldd.bak
 # HDL build/waves
-obj_dir/
 *.vcd
 *.fst
 *.wlf
@@ -28,8 +27,6 @@ build/
 .env
 .env.*
 !.env.example
-.kimi/
-.codex/
 .vscode/
 .idea/
 .DS_Store
