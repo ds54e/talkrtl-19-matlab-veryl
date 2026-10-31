@@ -6,6 +6,6 @@ MATLABとVerylとRgGenとXezimで何かやってみるテスト
 4. APBレジスタのRTL生成：RgGen
 5. LDOモデル作成：SV-RNM
 6. SV-RNMとRTLを統合してシミュレーション：Xezim
-7. MATLABとxezimの波形比較：MATLAB / Simulation Data Inspector
+7. MATLABとXezimの波形比較：MATLAB / Simulation Data Inspector
 
 ![MATLABとSV-RNMの比較結果](figures/overview.png)

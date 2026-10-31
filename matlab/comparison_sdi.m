@@ -2,14 +2,14 @@ function info = comparison_sdi(io)
 s = io.paths();
 
 REFERENCE_RUN_NAME = 'Reference: Simscape + Stateflow';
-IMPLEMENTATION_RUN_NAME = 'Implementation: xezim RNM + Veryl';
+IMPLEMENTATION_RUN_NAME = 'Implementation: Xezim RNM + Veryl';
 MAIN = {'vout', 'pg_cmp', 'pgood', 'state'};
 ZOH = {'en', 'load_hi', 'pg_cmp', 'pgood', 'state', 'rst'};
 
 assert(isfile(s.reference_session), 'talkrtl:Comparison', ...
     'reference SDI session がありません: %s', s.reference_session);
 assert(isfile(fullfile(s.xezim_dir, 'rnm_nominal_full.csv')), 'talkrtl:Comparison', ...
-    'xezim 出力がありません: %s (tools/run-xezim.sh が生成する)', s.xezim_dir);
+    'Xezim 出力がありません: %s (tools/run-xezim.sh が生成する)', s.xezim_dir);
 
 Simulink.sdi.clear();
 Simulink.sdi.load(s.reference_session);

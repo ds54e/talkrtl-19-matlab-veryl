@@ -13,7 +13,7 @@ for k = 1:numel(required)
     end
 end
 assert(isempty(missing), 'talkrtl:demo', ...
-    ['xezim 側の出力がありません: %s\n' ...
+    ['Xezim 側の出力がありません: %s\n' ...
      '先に ./tools/run-xezim.sh を実行してください。'], strjoin(missing, ', '));
 
 result = struct();
@@ -24,7 +24,7 @@ else
     result.reference = run_reference();
 end
 
-fprintf('=== comparison: reference model vs xezim ===\n');
+fprintf('=== comparison: reference model vs Xezim ===\n');
 result.compare = run_comparison();
 
 if isfield(result, 'reference')

@@ -35,7 +35,7 @@ plot(ax_v, t_a1, a1.vout, '--', 'Color', c1, 'LineWidth', 1.1);
 grid(ax_v, 'on');
 ylabel(ax_v, 'vout [V]');
 title(ax_v, 'Reference vs implementation — nominal 50 us');
-legend(ax_v, {'Reference: Simscape + Stateflow', 'Implementation: xezim RNM + Veryl'}, ...
+legend(ax_v, {'Reference: Simscape + Stateflow', 'Implementation: Xezim RNM + Veryl'}, ...
     'Location', 'southeast');
 ylim(ax_v, [0 1.08]);
 
