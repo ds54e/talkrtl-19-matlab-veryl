@@ -2,14 +2,14 @@ function info = comparison_sdi(io)
 s = io.paths();
 
 REFERENCE_RUN_NAME = 'Reference: Simscape + Stateflow';
-IMPLEMENTATION_RUN_NAME = 'Implementation: Verilator RNM + Veryl';
+IMPLEMENTATION_RUN_NAME = 'Implementation: xezim RNM + Veryl';
 MAIN = {'vout', 'pg_cmp', 'pgood', 'state'};
 ZOH = {'en', 'load_hi', 'pg_cmp', 'pgood', 'state', 'rst'};
 
 assert(isfile(s.reference_session), 'talkrtl:Comparison', ...
     'reference SDI session がありません: %s', s.reference_session);
-assert(isfile(fullfile(s.verilator_dir, 'rnm_nominal_full.csv')), 'talkrtl:Comparison', ...
-    'Verilator 出力がありません: %s (tools/run-verilator.sh が生成する)', s.verilator_dir);
+assert(isfile(fullfile(s.xezim_dir, 'rnm_nominal_full.csv')), 'talkrtl:Comparison', ...
+    'xezim 出力がありません: %s (tools/run-xezim.sh が生成する)', s.xezim_dir);
 
 Simulink.sdi.clear();
 Simulink.sdi.load(s.reference_session);
@@ -18,8 +18,8 @@ assert(~isempty(ids), 'talkrtl:Comparison', 'reference session に run があり
 ref_run = Simulink.sdi.getRun(ids(1));
 ref_run.Name = REFERENCE_RUN_NAME;
 
-full = io.readcsv(fullfile(s.verilator_dir, 'rnm_nominal_full.csv'));
-dig = io.readcsv(fullfile(s.verilator_dir, 'system_nominal.csv'));
+full = io.readcsv(fullfile(s.xezim_dir, 'rnm_nominal_full.csv'));
+dig = io.readcsv(fullfile(s.xezim_dir, 'system_nominal.csv'));
 t10 = full.time_ns * 1e-9;
 t100 = dig.time_ns * 1e-9;
 

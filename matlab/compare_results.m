@@ -5,9 +5,9 @@ TOL_SCALAR_MV = 0.1;
 TOL_CROSSING_NS = 10.0;
 
 a0 = io.readcsv(s.reference_analog);
-a1 = io.readcsv(fullfile(s.verilator_dir, 'rnm_nominal_full.csv'));
+a1 = io.readcsv(fullfile(s.xezim_dir, 'rnm_nominal_full.csv'));
 d0 = io.readcsv(s.reference_digital);
-d1 = io.readcsv(fullfile(s.verilator_dir, 'system_nominal.csv'));
+d1 = io.readcsv(fullfile(s.xezim_dir, 'system_nominal.csv'));
 
 C = {};
 t0 = round(a0.t_s * 1e9);

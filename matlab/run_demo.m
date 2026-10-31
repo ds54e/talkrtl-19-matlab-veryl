@@ -4,18 +4,17 @@ p.addParameter('SkipReference', false);
 p.parse(varargin{:});
 
 root = fileparts(fileparts(mfilename('fullpath')));
-verilator = fullfile(root, 'results', 'generated', 'verilator');
+xezim = fullfile(root, 'results', 'generated', 'xezim');
 required = {'rnm_nominal.csv', 'rnm_nominal_full.csv', 'system_nominal.csv'};
 missing = {};
 for k = 1:numel(required)
-    if ~isfile(fullfile(verilator, required{k}))
+    if ~isfile(fullfile(xezim, required{k}))
         missing{end + 1} = required{k}; %#ok<AGROW>
     end
 end
 assert(isempty(missing), 'talkrtl:demo', ...
-    ['Verilator 側の出力がありません: %s\n' ...
-     '先に ./tools/run-verilator.sh を実行してください ' ...
-     '(Verilator + g++ + make; validated with Verilator 5.052)。'], strjoin(missing, ', '));
+    ['xezim 側の出力がありません: %s\n' ...
+     '先に ./tools/run-xezim.sh を実行してください。'], strjoin(missing, ', '));
 
 result = struct();
 if p.Results.SkipReference
@@ -25,7 +24,7 @@ else
     result.reference = run_reference();
 end
 
-fprintf('=== comparison: reference model vs Verilator ===\n');
+fprintf('=== comparison: reference model vs xezim ===\n');
 result.compare = run_comparison();
 
 if isfield(result, 'reference')

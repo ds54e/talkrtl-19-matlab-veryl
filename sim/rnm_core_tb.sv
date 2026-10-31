@@ -2,7 +2,7 @@ module rnm_core_tb;
     timeunit 1ns;
     timeprecision 1ps;
 
-    int  en_rise_ns   = 2000;    // CONTRACT §5 nominal: en rises at 2 us
+    int  en_rise_ns   = 2000;    // CONTRACT シナリオ: en rises at 2 us
     int  load_rise_ns = 25000;   // load_hi rises at 25 us
     int  load_fall_ns = 35000;   // load_hi falls at 35 us
     int  en_fall_ns   = 0;       // 0 means "never" (no disable event)
@@ -50,7 +50,7 @@ module rnm_core_tb;
     endfunction
 
     task automatic check(input logic cond, input string what);
-        if (!cond) begin
+        if (cond !== 1'b1) begin
             errors = errors + 1;
             $display("RNM_CORE_FAIL: %s", what);
         end

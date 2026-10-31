@@ -7,19 +7,21 @@ module pgood_supervisor (
     state : output logic<2>,
 ) {
     // Keep debug state encoding stable in generated SystemVerilog.
-    const OFF : logic<2> = 2'd0;
-    const WAIT: logic<2> = 2'd1;
-    const ON  : logic<2> = 2'd2;
+    enum State: logic<2> {
+        OFF = 2'd0,
+        WAIT = 2'd1,
+        ON = 2'd2,
+    }
 
-    // 20 means elapsed intervals after k0, not number of High samples.
+    // Assert 20 clock intervals after k0, i.e. on the 21st consecutive High sample.
     const PG_STABLE_CYCLES: logic<5> = 5'd20;
 
-    // high_cnt counts elapsed intervals since the first High sample k0.
+    // high_cnt: 0 = no High yet, 1 at k0, n+1 at k0+n.
     const CNT_CLEAR: logic<5> = 5'd0;
     const CNT_STEP : logic<5> = 5'd1;
     const CNT_K0   : logic<5> = 5'd1;
 
-    var state_q : logic<2>;
+    var state_q : State   ;
     var pgood_q : logic   ;
     var high_cnt: logic<5>;
 
@@ -29,33 +31,33 @@ module pgood_supervisor (
     // Priority: rst, en==0, pg_cmp==0, qualification, ON hold.
     always_ff (clk, rst) {
         if_reset {
-            state_q  = OFF;
+            state_q  = State::OFF;
             pgood_q  = 0;
             high_cnt = CNT_CLEAR;
         } else {
             if (!en) {
-                state_q  = OFF;
+                state_q  = State::OFF;
                 pgood_q  = 0;
                 high_cnt = CNT_CLEAR;
             } else if (!pg_cmp) {
-                state_q  = WAIT;
+                state_q  = State::WAIT;
                 pgood_q  = 0;
                 high_cnt = CNT_CLEAR;
-            } else if (state_q == ON) {
-                state_q = ON;
+            } else if (state_q == State::ON) {
+                state_q = State::ON;
                 pgood_q = 1;
             } else if (high_cnt == CNT_CLEAR) {
-                // First High is k0: zero elapsed intervals.
-                state_q  = WAIT;
+                // First High sample is k0: high_cnt = 1.
+                state_q  = State::WAIT;
                 pgood_q  = 0;
                 high_cnt = CNT_K0;
             } else if (high_cnt >= PG_STABLE_CYCLES) {
                 // Assert at k0+20, the 21st consecutive High sample.
-                state_q  = ON;
+                state_q  = State::ON;
                 pgood_q  = 1;
                 high_cnt = high_cnt + CNT_STEP;
             } else {
-                state_q  = WAIT;
+                state_q  = State::WAIT;
                 pgood_q  = 0;
                 high_cnt = high_cnt + CNT_STEP;
             }

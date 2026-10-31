@@ -14,7 +14,7 @@ s.sdi_dir = fullfile(root, 'results', 'generated', 'sdi');
 s.reference_session = fullfile(s.sdi_dir, 'reference.mldatx');
 s.comparison_session = fullfile(s.sdi_dir, 'comparison.mldatx');
 s.comparison_dir = fullfile(root, 'results', 'generated', 'comparison');
-s.verilator_dir = fullfile(root, 'results', 'generated', 'verilator');
+s.xezim_dir = fullfile(root, 'results', 'generated', 'xezim');
 s.figure = fullfile(s.comparison_dir, 'overview.png');
 s.result = fullfile(s.comparison_dir, 'comparison.json');
 end

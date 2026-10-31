@@ -7,7 +7,7 @@ RGGEN_BIN="${RGGEN_BIN:-rggen}"
 
 # `veryl build --out-dir` preserves the target path from Veryl.toml.
 SNAPSHOTS=(
-  "rtl/generated/rggen/ldo_csr.sv|rggen/ldo_csr.sv"
+  "rtl/generated/rggen/ldo_csr.v|rggen/ldo_csr.v"
   "rtl/generated/veryl/pgood_supervisor.sv|veryl/results/generated/veryl/pgood_supervisor.sv"
 )
 # Re-enter a login shell once so user-local veryl/rggen installs are visible.

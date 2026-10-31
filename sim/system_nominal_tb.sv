@@ -80,7 +80,7 @@ module system_nominal_tb;
     endfunction
 
     task automatic check(input logic cond, input string what);
-        if (!cond) begin
+        if (cond !== 1'b1) begin
             errors = errors + 1;
             $display("SYSTEM_NOMINAL_FAIL: %s", what);
         end

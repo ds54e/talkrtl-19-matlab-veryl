@@ -31,7 +31,7 @@ geopath(chart, off, wait, '[en && !rst]', 1, 3, 9);
 geopath(chart, wait, off, '[rst]', 1, 9, 3);
 geopath(chart, wait, off, '[!en]', 2, 9, 3);
 geopath(chart, wait, on, ...
-    sprintf('[duration(pg_cmp, usec) >= %d]', params.pg_stable_cycles / 10), 3, 3, 9);
+    sprintf('[duration(pg_cmp, sec) >= %.17g]', (params.pg_stable_cycles - 0.5) * params.clk_period), 3, 3, 9);
 
 geopath(chart, on, off, '[rst]', 1, 9, 3);
 geopath(chart, on, off, '[!en]', 2, 9, 3);

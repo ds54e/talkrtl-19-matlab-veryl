@@ -6,7 +6,7 @@ module apb_system_tb;
 
     localparam int  CLK_HALF_NS    = 50;
     localparam int  PREAMBLE_TICKS = 2;
-    // CONTRACT section 7 register map
+    // CONTRACT APBレジスタ
     localparam logic [2:0] CTRL_ADDR   = 3'h0;   // 0x00 CTRL.EN[0]      RW
     localparam logic [2:0] STATUS_ADDR = 3'h4;   // 0x04 STATUS.PGOOD[0] RO, live
 
@@ -82,7 +82,16 @@ module apb_system_tb;
     ldo_csr u_csr (
         .i_clk          (clk),
         .i_rst_n        (rst_n),
-        .apb_if         (apb_if),
+        .i_psel         (apb_if.psel),
+        .i_penable      (apb_if.penable),
+        .i_paddr        (apb_if.paddr),
+        .i_pprot        (apb_if.pprot),
+        .i_pwrite       (apb_if.pwrite),
+        .i_pstrb        (apb_if.pstrb),
+        .i_pwdata       (apb_if.pwdata),
+        .o_pready       (apb_if.pready),
+        .o_prdata       (apb_if.prdata),
+        .o_pslverr      (apb_if.pslverr),
         .o_ctrl_en      (ctrl_en),
         .i_status_pgood (pgood)
     );
@@ -111,7 +120,7 @@ module apb_system_tb;
     endfunction
 
     task automatic check(input logic cond, input string what);
-        if (!cond) begin
+        if (cond !== 1'b1) begin
             errors = errors + 1;
             $display("APB_SYSTEM_FAIL: %s", what);
         end
@@ -255,6 +264,8 @@ module apb_system_tb;
 
         // tick 0: pure initial observation, no rising edge yet
         capture();
+        cap_ctrl_en = ctrl_en;
+        cap_pgood = pgood;
         record(0);
         repeat (steps_per_tick) begin
             #(dt_ns);

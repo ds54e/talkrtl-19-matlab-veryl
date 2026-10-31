@@ -13,9 +13,9 @@ command -v "$RGGEN_BIN" >/dev/null 2>&1 || {
 rm -rf "$OUT"
 mkdir -p "$OUT"
 
-"$RGGEN_BIN" -c "$ROOT/rtl/rggen/rggen.yml" -o "$OUT" --enable sv_rtl "$ROOT/rtl/rggen/ldo_csr.yml"
+"$RGGEN_BIN" --plugin rggen-verilog -c "$ROOT/rtl/rggen/rggen.yml" -o "$OUT" --enable verilog_rtl "$ROOT/rtl/rggen/ldo_csr.yml"
 
-GEN="$OUT/ldo_csr.sv"
+GEN="$OUT/ldo_csr.v"
 [[ -f "$GEN" ]] || { echo "CSR_FAIL: $GEN was not generated" >&2; exit 1; }
 
 echo "CSR_GENERATED $GEN"

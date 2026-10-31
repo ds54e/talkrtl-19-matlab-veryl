@@ -4,9 +4,9 @@ s = io.paths();
 if ~isfolder(s.comparison_dir), mkdir(s.comparison_dir); end
 
 a0 = io.readcsv(s.reference_analog);
-a1 = io.readcsv(fullfile(s.verilator_dir, 'rnm_nominal_full.csv'));
+a1 = io.readcsv(fullfile(s.xezim_dir, 'rnm_nominal_full.csv'));
 d0 = io.readcsv(s.reference_digital);
-d1 = io.readcsv(fullfile(s.verilator_dir, 'system_nominal.csv'));
+d1 = io.readcsv(fullfile(s.xezim_dir, 'system_nominal.csv'));
 
 t_a0 = a0.t_s * 1e6;           % us
 t_a1 = a1.time_ns / 1e3;       % us
@@ -14,7 +14,7 @@ t_d0 = d0.time_ns / 1e3;       % us
 t_d1 = d1.time_ns / 1e3;       % us
 % reference の digital.csv は DUT 出力だけを持つ (stimulus を含まない) ので、
 % scenario は reference 側の analog.csv と implementation 側の rnm_nominal.csv から取る。
-a1n = io.readcsv(fullfile(s.verilator_dir, 'rnm_nominal.csv'));
+a1n = io.readcsv(fullfile(s.xezim_dir, 'rnm_nominal.csv'));
 t_s0 = a0.t_s * 1e6;
 t_s1 = a1n.time_ns / 1e3;
 
@@ -35,7 +35,7 @@ plot(ax_v, t_a1, a1.vout, '--', 'Color', c1, 'LineWidth', 1.1);
 grid(ax_v, 'on');
 ylabel(ax_v, 'vout [V]');
 title(ax_v, 'Reference vs implementation — nominal 50 us');
-legend(ax_v, {'Reference: Simscape + Stateflow', 'Implementation: Verilator RNM + Veryl'}, ...
+legend(ax_v, {'Reference: Simscape + Stateflow', 'Implementation: xezim RNM + Veryl'}, ...
     'Location', 'southeast');
 ylim(ax_v, [0 1.08]);
 

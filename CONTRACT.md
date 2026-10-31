@@ -111,4 +111,4 @@ PGOOD監視ロジックは100 ns周期で動作し、状態は `OFF`, `WAIT`, `O
 
 ## 比較
 
-StateflowとVerylでは `pgood` と状態遷移を比較し、SimscapeとSV-RNMでは `vout` 波形と `pg_cmp` のしきい値通過時刻を比較する。最終的なMATLAB側とVerilator側の波形比較にはSimulation Data Inspectorを使う。
+StateflowとVerylでは `pgood` と状態遷移を比較し、SimscapeとSV-RNMでは `vout` 波形と `pg_cmp` のしきい値通過時刻を比較する。最終的なMATLAB側とxezim側の波形比較にはSimulation Data Inspectorを使う。
