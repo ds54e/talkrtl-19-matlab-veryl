@@ -18,9 +18,9 @@ assert(~isempty(rstd) && ~isempty(end_) && ~isempty(pgd), 'talkrtl:Supervisor', 
 mkdata(chart, 'pgood', 'Output', 'double', 1);
 mkdata(chart, 'state', 'Output', 'double', 2);
 
-off = mkstate(chart, 'OFF', sprintf('OFF\nen: pgood = 0; state = 0;'), [40 40 160 120]);
-wait = mkstate(chart, 'WAIT', sprintf('WAIT\nen: pgood = 0; state = 1;'), [320 260 440 340]);
-on = mkstate(chart, 'ON', sprintf('ON\nen: pgood = 1; state = 2;'), [640 40 760 120]);
+off = mkstate(chart, 'OFF', sprintf('OFF\nen: pgood = 0; state = 0;'), [120 300 230 120]);
+wait = mkstate(chart, 'WAIT', sprintf('WAIT\nen: pgood = 0; state = 1;'), [650 300 230 120]);
+on = mkstate(chart, 'ON', sprintf('ON\nen: pgood = 1; state = 2;'), [1180 300 230 120]);
 
 d = Stateflow.Transition(chart);
 d.Destination = off;

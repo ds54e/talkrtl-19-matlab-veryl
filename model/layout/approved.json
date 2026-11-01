@@ -1,0 +1,4616 @@
+{
+  "schema_version": 1,
+  "matlab_release": "2026a",
+  "blocks": [
+    {
+      "path": "Analog LDO",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO::Inport:1",
+        "Analog LDO::Inport:2",
+        "Analog LDO::Outport:1",
+        "Analog LDO::Outport:2",
+        "Analog LDO::Outport:3",
+        "Analog LDO::Outport:4"
+      ],
+      "graphics": {
+        "Position": [
+          200,
+          270,
+          340,
+          415
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Cout",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Cout::connection:Pgnd",
+        "Analog LDO/Cout::connection:Pvout"
+      ],
+      "graphics": {
+        "Position": [
+          949,
+          365,
+          991,
+          470
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Cout/Cout",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Cout/Cout::LConn:1",
+        "Analog LDO/Cout/Cout::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          280,
+          150,
+          320,
+          190
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Cout/Pgnd",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Cout/Pgnd::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          285,
+          270,
+          315,
+          300
+        ],
+        "Orientation": "up",
+        "BlockMirror": "off",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Right"
+    },
+    {
+      "path": "Analog LDO/Cout/Pvout",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Cout/Pvout::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          285,
+          40,
+          315,
+          70
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Left"
+    },
+    {
+      "path": "Analog LDO/Error Amp",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Error Amp::Inport:1",
+        "Analog LDO/Error Amp::Inport:2",
+        "Analog LDO/Error Amp::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          370,
+          208,
+          465,
+          252
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/ea_gain",
+      "type": "Gain",
+      "ports": [
+        "Analog LDO/Error Amp/ea_gain::Inport:1",
+        "Analog LDO/Error Amp/ea_gain::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          400,
+          155,
+          450,
+          205
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/ea_lag",
+      "type": "Integrator",
+      "ports": [
+        "Analog LDO/Error Amp/ea_lag::Inport:1",
+        "Analog LDO/Error Amp/ea_lag::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          830,
+          235,
+          880,
+          285
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/ea_lag_gain",
+      "type": "Gain",
+      "ports": [
+        "Analog LDO/Error Amp/ea_lag_gain::Inport:1",
+        "Analog LDO/Error Amp/ea_lag_gain::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          750,
+          235,
+          800,
+          285
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/ea_lag_sum",
+      "type": "Sum",
+      "ports": [
+        "Analog LDO/Error Amp/ea_lag_sum::Inport:1",
+        "Analog LDO/Error Amp/ea_lag_sum::Inport:2",
+        "Analog LDO/Error Amp/ea_lag_sum::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          680,
+          240,
+          720,
+          280
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "off",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off",
+        "IconShape": "round"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/ea_sum",
+      "type": "Sum",
+      "ports": [
+        "Analog LDO/Error Amp/ea_sum::Inport:1",
+        "Analog LDO/Error Amp/ea_sum::Inport:2",
+        "Analog LDO/Error Amp/ea_sum::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          320,
+          160,
+          360,
+          200
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "off",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off",
+        "IconShape": "round"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/en",
+      "type": "Inport",
+      "ports": [
+        "Analog LDO/Error Amp/en::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          465,
+          190,
+          495,
+          210
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/en_gate",
+      "type": "Product",
+      "ports": [
+        "Analog LDO/Error Amp/en_gate::Inport:1",
+        "Analog LDO/Error Amp/en_gate::Inport:2",
+        "Analog LDO/Error Amp/en_gate::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          535,
+          170,
+          575,
+          210
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/vctrl",
+      "type": "Outport",
+      "ports": [
+        "Analog LDO/Error Amp/vctrl::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          950,
+          250,
+          980,
+          270
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/vctrl_limit",
+      "type": "Saturate",
+      "ports": [
+        "Analog LDO/Error Amp/vctrl_limit::Inport:1",
+        "Analog LDO/Error Amp/vctrl_limit::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          615,
+          165,
+          665,
+          215
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/vfb",
+      "type": "Inport",
+      "ports": [
+        "Analog LDO/Error Amp/vfb::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          325,
+          230,
+          355,
+          250
+        ],
+        "Orientation": "up",
+        "BlockMirror": "off",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Error Amp/vref",
+      "type": "Constant",
+      "ports": [
+        "Analog LDO/Error Amp/vref::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          315,
+          100,
+          365,
+          130
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Isense_pass",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Isense_pass::LConn:1",
+        "Analog LDO/Isense_pass::RConn:1",
+        "Analog LDO/Isense_pass::RConn:2"
+      ],
+      "graphics": {
+        "Position": [
+          655,
+          250,
+          695,
+          290
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Load",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Load::Inport:1",
+        "Analog LDO/Load::connection:Pgnd",
+        "Analog LDO/Load::connection:Pvout"
+      ],
+      "graphics": {
+        "Position": [
+          879,
+          365,
+          921,
+          470
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Load/Pgnd",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Load/Pgnd::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          175,
+          295,
+          205,
+          325
+        ],
+        "Orientation": "up",
+        "BlockMirror": "off",
+        "BlockRotation": 270,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Right"
+    },
+    {
+      "path": "Analog LDO/Load/Pvout",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Load/Pvout::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          175,
+          45,
+          205,
+          75
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Left"
+    },
+    {
+      "path": "Analog LDO/Load/Rheavy",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Load/Rheavy::LConn:1",
+        "Analog LDO/Load/Rheavy::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          251,
+          135,
+          279,
+          175
+        ],
+        "Orientation": "down",
+        "BlockMirror": "off",
+        "BlockRotation": 90,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Load/Rload",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Load/Rload::LConn:1",
+        "Analog LDO/Load/Rload::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          176,
+          135,
+          204,
+          175
+        ],
+        "Orientation": "down",
+        "BlockMirror": "off",
+        "BlockRotation": 90,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Load/Sw_heavy",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Load/Sw_heavy::LConn:1",
+        "Analog LDO/Load/Sw_heavy::RConn:1",
+        "Analog LDO/Load/Sw_heavy::RConn:2"
+      ],
+      "graphics": {
+        "Position": [
+          245,
+          190,
+          285,
+          230
+        ],
+        "Orientation": "down",
+        "BlockMirror": "off",
+        "BlockRotation": 90,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Load/hi2ps",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Load/hi2ps::Inport:1",
+        "Analog LDO/Load/hi2ps::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          130,
+          237,
+          145,
+          253
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Load/load_hi",
+      "type": "Inport",
+      "ports": [
+        "Analog LDO/Load/load_hi::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          70,
+          235,
+          100,
+          255
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Pass::Inport:1",
+        "Analog LDO/Pass::Inport:2",
+        "Analog LDO/Pass::connection:Pvin",
+        "Analog LDO/Pass::connection:Pvout"
+      ],
+      "graphics": {
+        "Position": [
+          545,
+          210,
+          625,
+          330
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass/Icmd2PS",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Pass/Icmd2PS::Inport:1",
+        "Analog LDO/Pass/Icmd2PS::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          520,
+          202,
+          535,
+          218
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass/Ipass",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Pass/Ipass::LConn:1",
+        "Analog LDO/Pass/Ipass::RConn:1",
+        "Analog LDO/Pass/Ipass::RConn:2"
+      ],
+      "graphics": {
+        "Position": [
+          620,
+          200,
+          660,
+          240
+        ],
+        "Orientation": "left",
+        "BlockMirror": "on",
+        "BlockRotation": -0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass/Pvin",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Pass/Pvin::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          565,
+          215,
+          595,
+          245
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Left"
+    },
+    {
+      "path": "Analog LDO/Pass/Pvout",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Pass/Pvout::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          685,
+          205,
+          715,
+          235
+        ],
+        "Orientation": "left",
+        "BlockMirror": "on",
+        "BlockRotation": -0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Right"
+    },
+    {
+      "path": "Analog LDO/Pass/en",
+      "type": "Inport",
+      "ports": [
+        "Analog LDO/Pass/en::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          385,
+          210,
+          415,
+          230
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass/en_gate",
+      "type": "Product",
+      "ports": [
+        "Analog LDO/Pass/en_gate::Inport:1",
+        "Analog LDO/Pass/en_gate::Inport:2",
+        "Analog LDO/Pass/en_gate::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          440,
+          190,
+          480,
+          230
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass/gm_pass",
+      "type": "Gain",
+      "ports": [
+        "Analog LDO/Pass/gm_pass::Inport:1",
+        "Analog LDO/Pass/gm_pass::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          225,
+          175,
+          275,
+          225
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass/ipass_limit",
+      "type": "Saturate",
+      "ports": [
+        "Analog LDO/Pass/ipass_limit::Inport:1",
+        "Analog LDO/Pass/ipass_limit::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          310,
+          175,
+          360,
+          225
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Pass/vctrl",
+      "type": "Inport",
+      "ports": [
+        "Analog LDO/Pass/vctrl::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          165,
+          190,
+          195,
+          210
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Rdiv",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Rdiv::Outport:1",
+        "Analog LDO/Rdiv::connection:Pgnd",
+        "Analog LDO/Rdiv::connection:Pvout"
+      ],
+      "graphics": {
+        "Position": [
+          745,
+          363,
+          795,
+          467
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Rdiv/Pgnd",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Rdiv/Pgnd::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          285,
+          380,
+          315,
+          410
+        ],
+        "Orientation": "up",
+        "BlockMirror": "off",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Left"
+    },
+    {
+      "path": "Analog LDO/Rdiv/Pvout",
+      "type": "PMIOPort",
+      "ports": [
+        "Analog LDO/Rdiv/Pvout::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          285,
+          130,
+          315,
+          160
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": "Left"
+    },
+    {
+      "path": "Analog LDO/Rdiv/Rbot",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Rdiv/Rbot::LConn:1",
+        "Analog LDO/Rdiv/Rbot::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          286,
+          270,
+          314,
+          310
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Rdiv/Rtop",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Rdiv/Rtop::LConn:1",
+        "Analog LDO/Rdiv/Rtop::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          286,
+          180,
+          314,
+          220
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Rdiv/Vsense_vfb",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Rdiv/Vsense_vfb::LConn:1",
+        "Analog LDO/Rdiv/Vsense_vfb::RConn:1",
+        "Analog LDO/Rdiv/Vsense_vfb::RConn:2"
+      ],
+      "graphics": {
+        "Position": [
+          350,
+          285,
+          390,
+          325
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Rdiv/vfb",
+      "type": "Outport",
+      "ports": [
+        "Analog LDO/Rdiv/vfb::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          465,
+          350,
+          495,
+          370
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Rdiv/vfb2sim",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/Rdiv/vfb2sim::LConn:1",
+        "Analog LDO/Rdiv/vfb2sim::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          425,
+          352,
+          440,
+          368
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Ref",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Ref::LConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          545,
+          525,
+          585,
+          565
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/SC",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/SC::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          435,
+          494,
+          480,
+          526
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Vin",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Vin::LConn:1",
+        "Analog LDO/Vin::RConn:1"
+      ],
+      "graphics": {
+        "Position": [
+          501,
+          395,
+          529,
+          435
+        ],
+        "Orientation": "down",
+        "BlockMirror": "on",
+        "BlockRotation": 270,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/Vsense_vout",
+      "type": "SimscapeBlock",
+      "ports": [
+        "Analog LDO/Vsense_vout::LConn:1",
+        "Analog LDO/Vsense_vout::RConn:1",
+        "Analog LDO/Vsense_vout::RConn:2"
+      ],
+      "graphics": {
+        "Position": [
+          1055,
+          310,
+          1095,
+          350
+        ],
+        "Orientation": "down",
+        "BlockMirror": "off",
+        "BlockRotation": 90,
+        "NamePlacement": "alternate",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/en",
+      "type": "Inport",
+      "ports": [
+        "Analog LDO/en::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          270,
+          260,
+          300,
+          280
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/ipass",
+      "type": "Outport",
+      "ports": [
+        "Analog LDO/ipass::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          785,
+          160,
+          815,
+          180
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/ipass2sim",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/ipass2sim::LConn:1",
+        "Analog LDO/ipass2sim::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          735,
+          162,
+          750,
+          178
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/load_hi",
+      "type": "Inport",
+      "ports": [
+        "Analog LDO/load_hi::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          840,
+          310,
+          870,
+          330
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/vctrl",
+      "type": "Outport",
+      "ports": [
+        "Analog LDO/vctrl::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          520,
+          160,
+          550,
+          180
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/vfb",
+      "type": "Outport",
+      "ports": [
+        "Analog LDO/vfb::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          370,
+          160,
+          400,
+          180
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/vout",
+      "type": "Outport",
+      "ports": [
+        "Analog LDO/vout::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          1165,
+          365,
+          1195,
+          385
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Analog LDO/vout2sim",
+      "type": "SubSystem",
+      "ports": [
+        "Analog LDO/vout2sim::LConn:1",
+        "Analog LDO/vout2sim::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          1115,
+          367,
+          1130,
+          383
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "automatic",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "Supervisor",
+      "type": "SubSystem",
+      "ports": [
+        "Supervisor::Inport:1",
+        "Supervisor::Inport:2",
+        "Supervisor::Inport:3",
+        "Supervisor::Outport:1",
+        "Supervisor::Outport:2"
+      ],
+      "graphics": {
+        "Position": [
+          680,
+          116,
+          830,
+          324
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "en",
+      "type": "Inport",
+      "ports": [
+        "en::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          105,
+          300,
+          135,
+          320
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "en_b",
+      "type": "DataTypeConversion",
+      "ports": [
+        "en_b::Inport:1",
+        "en_b::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          600,
+          205,
+          650,
+          235
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "load_hi",
+      "type": "Inport",
+      "ports": [
+        "load_hi::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          105,
+          370,
+          135,
+          390
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "out_ipass",
+      "type": "Outport",
+      "ports": [
+        "out_ipass::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          380,
+          385,
+          410,
+          405
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "out_pg_cmp",
+      "type": "Outport",
+      "ports": [
+        "out_pg_cmp::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          555,
+          230,
+          585,
+          250
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "out_pgood",
+      "type": "Outport",
+      "ports": [
+        "out_pgood::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          870,
+          160,
+          900,
+          180
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "out_state",
+      "type": "Outport",
+      "ports": [
+        "out_state::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          870,
+          265,
+          900,
+          285
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "out_vctrl",
+      "type": "Outport",
+      "ports": [
+        "out_vctrl::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          380,
+          350,
+          410,
+          370
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "out_vfb",
+      "type": "Outport",
+      "ports": [
+        "out_vfb::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          380,
+          315,
+          410,
+          335
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "out_vout",
+      "type": "Outport",
+      "ports": [
+        "out_vout::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          380,
+          230,
+          410,
+          250
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp",
+      "type": "SubSystem",
+      "ports": [
+        "pg_cmp::Inport:1",
+        "pg_cmp::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          430,
+          255,
+          515,
+          325
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/fall",
+      "type": "RelationalOperator",
+      "ports": [
+        "pg_cmp/fall::Inport:1",
+        "pg_cmp/fall::Inport:2",
+        "pg_cmp/fall::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          220,
+          230,
+          280,
+          290
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/hold_high",
+      "type": "Logic",
+      "ports": [
+        "pg_cmp/hold_high::Inport:1",
+        "pg_cmp/hold_high::Inport:2",
+        "pg_cmp/hold_high::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          465,
+          215,
+          525,
+          275
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off",
+        "IconShape": "rectangular"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/next",
+      "type": "Logic",
+      "ports": [
+        "pg_cmp/next::Inport:1",
+        "pg_cmp/next::Inport:2",
+        "pg_cmp/next::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          565,
+          145,
+          625,
+          205
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off",
+        "IconShape": "rectangular"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/not_fall",
+      "type": "Logic",
+      "ports": [
+        "pg_cmp/not_fall::Inport:1",
+        "pg_cmp/not_fall::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          325,
+          240,
+          365,
+          280
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off",
+        "IconShape": "rectangular"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/pg_cmp",
+      "type": "Outport",
+      "ports": [
+        "pg_cmp/pg_cmp::Inport:1"
+      ],
+      "graphics": {
+        "Position": [
+          805,
+          165,
+          835,
+          185
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/pg_high",
+      "type": "Constant",
+      "ports": [
+        "pg_cmp/pg_high::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          140,
+          165,
+          180,
+          185
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/pg_low",
+      "type": "Constant",
+      "ports": [
+        "pg_cmp/pg_low::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          140,
+          265,
+          180,
+          285
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/prev",
+      "type": "Memory",
+      "ports": [
+        "pg_cmp/prev::Inport:1",
+        "pg_cmp/prev::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          395,
+          210,
+          435,
+          250
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/rise",
+      "type": "RelationalOperator",
+      "ports": [
+        "pg_cmp/rise::Inport:1",
+        "pg_cmp/rise::Inport:2",
+        "pg_cmp/rise::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          220,
+          130,
+          280,
+          190
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/to_double",
+      "type": "DataTypeConversion",
+      "ports": [
+        "pg_cmp/to_double::Inport:1",
+        "pg_cmp/to_double::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          700,
+          155,
+          770,
+          195
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp/vout",
+      "type": "Inport",
+      "ports": [
+        "pg_cmp/vout::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          55,
+          190,
+          85,
+          210
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "pg_cmp_b",
+      "type": "DataTypeConversion",
+      "ports": [
+        "pg_cmp_b::Inport:1",
+        "pg_cmp_b::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          600,
+          275,
+          650,
+          305
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "rst",
+      "type": "Inport",
+      "ports": [
+        "rst::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          105,
+          140,
+          135,
+          160
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    },
+    {
+      "path": "rst_b",
+      "type": "DataTypeConversion",
+      "ports": [
+        "rst_b::Inport:1",
+        "rst_b::Outport:1"
+      ],
+      "graphics": {
+        "Position": [
+          600,
+          135,
+          650,
+          165
+        ],
+        "Orientation": "right",
+        "BlockMirror": "off",
+        "BlockRotation": 0,
+        "NamePlacement": "normal",
+        "ShowName": "on",
+        "FontName": "auto",
+        "FontSize": 11,
+        "FontWeight": "auto",
+        "FontAngle": "auto",
+        "ForegroundColor": "black",
+        "BackgroundColor": "white",
+        "DropShadow": "off"
+      },
+      "port_side": ""
+    }
+  ],
+  "systems": [
+    {
+      "path": "",
+      "zoom": "173",
+      "nets": [
+        {
+          "kind": "signal",
+          "root": "Analog LDO::Outport:1",
+          "terminals": [
+            "Analog LDO::Outport:1",
+            "out_vout::Inport:1",
+            "pg_cmp::Inport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO::Outport:1",
+              "to_port": "out_vout::Inport:1",
+              "points": [
+                [
+                  345,
+                  290
+                ],
+                [
+                  358,
+                  290
+                ],
+                [
+                  358,
+                  240
+                ],
+                [
+                  375,
+                  240
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "pg_cmp::Inport:1",
+              "points": [
+                [
+                  358,
+                  290
+                ],
+                [
+                  425,
+                  290
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO::Outport:2",
+          "terminals": [
+            "Analog LDO::Outport:2",
+            "out_vfb::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO::Outport:2",
+            "to_port": "out_vfb::Inport:1",
+            "points": [
+              [
+                345,
+                325
+              ],
+              [
+                375,
+                325
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO::Outport:3",
+          "terminals": [
+            "Analog LDO::Outport:3",
+            "out_vctrl::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO::Outport:3",
+            "to_port": "out_vctrl::Inport:1",
+            "points": [
+              [
+                345,
+                360
+              ],
+              [
+                375,
+                360
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO::Outport:4",
+          "terminals": [
+            "Analog LDO::Outport:4",
+            "out_ipass::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO::Outport:4",
+            "to_port": "out_ipass::Inport:1",
+            "points": [
+              [
+                345,
+                395
+              ],
+              [
+                375,
+                395
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Supervisor::Outport:1",
+          "terminals": [
+            "Supervisor::Outport:1",
+            "out_pgood::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Supervisor::Outport:1",
+            "to_port": "out_pgood::Inport:1",
+            "points": [
+              [
+                835,
+                170
+              ],
+              [
+                865,
+                170
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Supervisor::Outport:2",
+          "terminals": [
+            "Supervisor::Outport:2",
+            "out_state::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Supervisor::Outport:2",
+            "to_port": "out_state::Inport:1",
+            "points": [
+              [
+                835,
+                275
+              ],
+              [
+                865,
+                275
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "en::Outport:1",
+          "terminals": [
+            "Analog LDO::Inport:1",
+            "en::Outport:1",
+            "en_b::Inport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "en::Outport:1",
+              "to_port": "en_b::Inport:1",
+              "points": [
+                [
+                  140,
+                  310
+                ],
+                [
+                  158,
+                  310
+                ],
+                [
+                  158,
+                  220
+                ],
+                [
+                  595,
+                  220
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO::Inport:1",
+              "points": [
+                [
+                  158,
+                  310
+                ],
+                [
+                  195,
+                  310
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "en_b::Outport:1",
+          "terminals": [
+            "Supervisor::Inport:2",
+            "en_b::Outport:1"
+          ],
+          "paths": {
+            "from_port": "en_b::Outport:1",
+            "to_port": "Supervisor::Inport:2",
+            "points": [
+              [
+                655,
+                220
+              ],
+              [
+                675,
+                220
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "load_hi::Outport:1",
+          "terminals": [
+            "Analog LDO::Inport:2",
+            "load_hi::Outport:1"
+          ],
+          "paths": {
+            "from_port": "load_hi::Outport:1",
+            "to_port": "Analog LDO::Inport:2",
+            "points": [
+              [
+                140,
+                380
+              ],
+              [
+                195,
+                380
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp::Outport:1",
+          "terminals": [
+            "out_pg_cmp::Inport:1",
+            "pg_cmp::Outport:1",
+            "pg_cmp_b::Inport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "pg_cmp::Outport:1",
+              "to_port": "out_pg_cmp::Inport:1",
+              "points": [
+                [
+                  520,
+                  290
+                ],
+                [
+                  529,
+                  290
+                ],
+                [
+                  529,
+                  240
+                ],
+                [
+                  550,
+                  240
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "pg_cmp_b::Inport:1",
+              "points": [
+                [
+                  529,
+                  290
+                ],
+                [
+                  595,
+                  290
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp_b::Outport:1",
+          "terminals": [
+            "Supervisor::Inport:3",
+            "pg_cmp_b::Outport:1"
+          ],
+          "paths": {
+            "from_port": "pg_cmp_b::Outport:1",
+            "to_port": "Supervisor::Inport:3",
+            "points": [
+              [
+                655,
+                290
+              ],
+              [
+                675,
+                290
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "rst::Outport:1",
+          "terminals": [
+            "rst::Outport:1",
+            "rst_b::Inport:1"
+          ],
+          "paths": {
+            "from_port": "rst::Outport:1",
+            "to_port": "rst_b::Inport:1",
+            "points": [
+              [
+                140,
+                150
+              ],
+              [
+                595,
+                150
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "rst_b::Outport:1",
+          "terminals": [
+            "Supervisor::Inport:1",
+            "rst_b::Outport:1"
+          ],
+          "paths": {
+            "from_port": "rst_b::Outport:1",
+            "to_port": "Supervisor::Inport:1",
+            "points": [
+              [
+                655,
+                150
+              ],
+              [
+                675,
+                150
+              ]
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "path": "Analog LDO",
+      "zoom": "125",
+      "nets": [
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp::Outport:1",
+            "Analog LDO/Pass::Inport:1",
+            "Analog LDO/vctrl::Inport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Error Amp::Outport:1",
+              "to_port": "Analog LDO/vctrl::Inport:1",
+              "points": [
+                [
+                  470,
+                  230
+                ],
+                [
+                  485,
+                  230
+                ],
+                [
+                  485,
+                  170
+                ],
+                [
+                  515,
+                  170
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Pass::Inport:1",
+              "points": [
+                [
+                  485,
+                  230
+                ],
+                [
+                  540,
+                  230
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Rdiv::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp::Inport:1",
+            "Analog LDO/Rdiv::Outport:1",
+            "Analog LDO/vfb::Inport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Rdiv::Outport:1",
+              "to_port": "Analog LDO/vfb::Inport:1",
+              "points": [
+                [
+                  800,
+                  415
+                ],
+                [
+                  819,
+                  415
+                ],
+                [
+                  819,
+                  350
+                ],
+                [
+                  331,
+                  350
+                ],
+                [
+                  331,
+                  220
+                ],
+                [
+                  331,
+                  170
+                ],
+                [
+                  365,
+                  170
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Error Amp::Inport:1",
+              "points": [
+                [
+                  331,
+                  220
+                ],
+                [
+                  365,
+                  220
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/en::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp::Inport:2",
+            "Analog LDO/Pass::Inport:2",
+            "Analog LDO/en::Outport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/en::Outport:1",
+              "to_port": "Analog LDO/Pass::Inport:2",
+              "points": [
+                [
+                  305,
+                  270
+                ],
+                [
+                  347,
+                  270
+                ],
+                [
+                  540,
+                  270
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Error Amp::Inport:2",
+              "points": [
+                [
+                  347,
+                  270
+                ],
+                [
+                  347,
+                  240
+                ],
+                [
+                  365,
+                  240
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/ipass2sim::Outport:1",
+          "terminals": [
+            "Analog LDO/ipass2sim::Outport:1",
+            "Analog LDO/ipass::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/ipass2sim::Outport:1",
+            "to_port": "Analog LDO/ipass::Inport:1",
+            "points": [
+              [
+                755,
+                170
+              ],
+              [
+                780,
+                170
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/load_hi::Outport:1",
+          "terminals": [
+            "Analog LDO/Load::Inport:1",
+            "Analog LDO/load_hi::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/load_hi::Outport:1",
+            "to_port": "Analog LDO/Load::Inport:1",
+            "points": [
+              [
+                875,
+                320
+              ],
+              [
+                890,
+                320
+              ],
+              [
+                890,
+                360
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/vout2sim::Outport:1",
+          "terminals": [
+            "Analog LDO/vout2sim::Outport:1",
+            "Analog LDO/vout::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/vout2sim::Outport:1",
+            "to_port": "Analog LDO/vout::Inport:1",
+            "points": [
+              [
+                1135,
+                375
+              ],
+              [
+                1160,
+                375
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Vin::RConn:1",
+          "terminals": [
+            "Analog LDO/Cout::connection:Pgnd",
+            "Analog LDO/Load::connection:Pgnd",
+            "Analog LDO/Rdiv::connection:Pgnd",
+            "Analog LDO/Ref::LConn:1",
+            "Analog LDO/SC::RConn:1",
+            "Analog LDO/Vin::RConn:1",
+            "Analog LDO/Vsense_vout::RConn:2"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Vin::RConn:1",
+              "to_port": "Analog LDO/Vsense_vout::RConn:2",
+              "points": [
+                [
+                  515,
+                  450
+                ],
+                [
+                  515,
+                  510
+                ],
+                [
+                  565,
+                  510
+                ],
+                [
+                  730,
+                  510
+                ],
+                [
+                  900,
+                  510
+                ],
+                [
+                  970,
+                  510
+                ],
+                [
+                  1065,
+                  510
+                ],
+                [
+                  1065,
+                  354
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Cout::connection:Pgnd",
+              "points": [
+                [
+                  970,
+                  510
+                ],
+                [
+                  970,
+                  474
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Load::connection:Pgnd",
+              "points": [
+                [
+                  900,
+                  510
+                ],
+                [
+                  900,
+                  474
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Rdiv::connection:Pgnd",
+              "points": [
+                [
+                  730,
+                  510
+                ],
+                [
+                  730,
+                  440
+                ],
+                [
+                  741,
+                  440
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Ref::LConn:1",
+              "points": [
+                [
+                  565,
+                  510
+                ],
+                [
+                  565,
+                  521
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/SC::RConn:1",
+              "points": [
+                [
+                  515,
+                  510
+                ],
+                [
+                  484,
+                  510
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Isense_pass::RConn:2",
+          "terminals": [
+            "Analog LDO/Cout::connection:Pvout",
+            "Analog LDO/Isense_pass::RConn:2",
+            "Analog LDO/Load::connection:Pvout",
+            "Analog LDO/Rdiv::connection:Pvout",
+            "Analog LDO/Vsense_vout::LConn:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Isense_pass::RConn:2",
+              "to_port": "Analog LDO/Vsense_vout::LConn:1",
+              "points": [
+                [
+                  710,
+                  280
+                ],
+                [
+                  729,
+                  280
+                ],
+                [
+                  910,
+                  280
+                ],
+                [
+                  970,
+                  280
+                ],
+                [
+                  1075,
+                  280
+                ],
+                [
+                  1075,
+                  306
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Cout::connection:Pvout",
+              "points": [
+                [
+                  970,
+                  280
+                ],
+                [
+                  970,
+                  361
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Load::connection:Pvout",
+              "points": [
+                [
+                  910,
+                  280
+                ],
+                [
+                  910,
+                  361
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Rdiv::connection:Pvout",
+              "points": [
+                [
+                  729,
+                  280
+                ],
+                [
+                  729,
+                  390
+                ],
+                [
+                  741,
+                  390
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Pass::connection:Pvout",
+          "terminals": [
+            "Analog LDO/Isense_pass::LConn:1",
+            "Analog LDO/Pass::connection:Pvout"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass::connection:Pvout",
+            "to_port": "Analog LDO/Isense_pass::LConn:1",
+            "points": [
+              [
+                640,
+                270
+              ],
+              [
+                651,
+                270
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Isense_pass::RConn:1",
+          "terminals": [
+            "Analog LDO/Isense_pass::RConn:1",
+            "Analog LDO/ipass2sim::LConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Isense_pass::RConn:1",
+            "to_port": "Analog LDO/ipass2sim::LConn:1",
+            "points": [
+              [
+                710,
+                260
+              ],
+              [
+                710,
+                170
+              ],
+              [
+                731,
+                170
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Vin::LConn:1",
+          "terminals": [
+            "Analog LDO/Pass::connection:Pvin",
+            "Analog LDO/Vin::LConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Vin::LConn:1",
+            "to_port": "Analog LDO/Pass::connection:Pvin",
+            "points": [
+              [
+                515,
+                380
+              ],
+              [
+                515,
+                310
+              ],
+              [
+                541,
+                310
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Vsense_vout::RConn:1",
+          "terminals": [
+            "Analog LDO/Vsense_vout::RConn:1",
+            "Analog LDO/vout2sim::LConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Vsense_vout::RConn:1",
+            "to_port": "Analog LDO/vout2sim::LConn:1",
+            "points": [
+              [
+                1085,
+                365
+              ],
+              [
+                1085,
+                375
+              ],
+              [
+                1111,
+                375
+              ]
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "path": "Analog LDO/Cout",
+      "zoom": "339",
+      "nets": [
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Cout/Pvout::RConn:1",
+          "terminals": [
+            "Analog LDO/Cout/Cout::LConn:1",
+            "Analog LDO/Cout/Pvout::RConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Cout/Pvout::RConn:1",
+            "to_port": "Analog LDO/Cout/Cout::LConn:1",
+            "points": [
+              [
+                300,
+                85
+              ],
+              [
+                300,
+                146
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Cout/Cout::RConn:1",
+          "terminals": [
+            "Analog LDO/Cout/Cout::RConn:1",
+            "Analog LDO/Cout/Pgnd::RConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Cout/Cout::RConn:1",
+            "to_port": "Analog LDO/Cout/Pgnd::RConn:1",
+            "points": [
+              [
+                300,
+                205
+              ],
+              [
+                300,
+                266
+              ]
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "path": "Analog LDO/Error Amp",
+      "zoom": "211",
+      "nets": [
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/ea_gain::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_gain::Outport:1",
+            "Analog LDO/Error Amp/en_gate::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/ea_gain::Outport:1",
+            "to_port": "Analog LDO/Error Amp/en_gate::Inport:1",
+            "points": [
+              [
+                455,
+                180
+              ],
+              [
+                530,
+                180
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/ea_lag::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_lag::Outport:1",
+            "Analog LDO/Error Amp/ea_lag_sum::Inport:2",
+            "Analog LDO/Error Amp/vctrl::Inport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Error Amp/ea_lag::Outport:1",
+              "to_port": "Analog LDO/Error Amp/ea_lag_sum::Inport:2",
+              "points": [
+                [
+                  885,
+                  260
+                ],
+                [
+                  911,
+                  260
+                ],
+                [
+                  911,
+                  334
+                ],
+                [
+                  700,
+                  334
+                ],
+                [
+                  700,
+                  285
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Error Amp/vctrl::Inport:1",
+              "points": [
+                [
+                  911,
+                  260
+                ],
+                [
+                  945,
+                  260
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/ea_lag_gain::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_lag::Inport:1",
+            "Analog LDO/Error Amp/ea_lag_gain::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/ea_lag_gain::Outport:1",
+            "to_port": "Analog LDO/Error Amp/ea_lag::Inport:1",
+            "points": [
+              [
+                805,
+                260
+              ],
+              [
+                825,
+                260
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/ea_lag_sum::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_lag_gain::Inport:1",
+            "Analog LDO/Error Amp/ea_lag_sum::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/ea_lag_sum::Outport:1",
+            "to_port": "Analog LDO/Error Amp/ea_lag_gain::Inport:1",
+            "points": [
+              [
+                725,
+                260
+              ],
+              [
+                745,
+                260
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/ea_sum::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_gain::Inport:1",
+            "Analog LDO/Error Amp/ea_sum::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/ea_sum::Outport:1",
+            "to_port": "Analog LDO/Error Amp/ea_gain::Inport:1",
+            "points": [
+              [
+                365,
+                180
+              ],
+              [
+                395,
+                180
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/en::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/en::Outport:1",
+            "Analog LDO/Error Amp/en_gate::Inport:2"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/en::Outport:1",
+            "to_port": "Analog LDO/Error Amp/en_gate::Inport:2",
+            "points": [
+              [
+                500,
+                200
+              ],
+              [
+                530,
+                200
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/en_gate::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/en_gate::Outport:1",
+            "Analog LDO/Error Amp/vctrl_limit::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/en_gate::Outport:1",
+            "to_port": "Analog LDO/Error Amp/vctrl_limit::Inport:1",
+            "points": [
+              [
+                580,
+                190
+              ],
+              [
+                610,
+                190
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/vctrl_limit::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_lag_sum::Inport:1",
+            "Analog LDO/Error Amp/vctrl_limit::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/vctrl_limit::Outport:1",
+            "to_port": "Analog LDO/Error Amp/ea_lag_sum::Inport:1",
+            "points": [
+              [
+                670,
+                190
+              ],
+              [
+                700,
+                190
+              ],
+              [
+                700,
+                235
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/vfb::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_sum::Inport:2",
+            "Analog LDO/Error Amp/vfb::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/vfb::Outport:1",
+            "to_port": "Analog LDO/Error Amp/ea_sum::Inport:2",
+            "points": [
+              [
+                340,
+                225
+              ],
+              [
+                340,
+                205
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Error Amp/vref::Outport:1",
+          "terminals": [
+            "Analog LDO/Error Amp/ea_sum::Inport:1",
+            "Analog LDO/Error Amp/vref::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Error Amp/vref::Outport:1",
+            "to_port": "Analog LDO/Error Amp/ea_sum::Inport:1",
+            "points": [
+              [
+                340,
+                135
+              ],
+              [
+                340,
+                155
+              ]
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "path": "Analog LDO/Load",
+      "zoom": "315",
+      "nets": [
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Load/load_hi::Outport:1",
+          "terminals": [
+            "Analog LDO/Load/hi2ps::Inport:1",
+            "Analog LDO/Load/load_hi::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Load/load_hi::Outport:1",
+            "to_port": "Analog LDO/Load/hi2ps::Inport:1",
+            "points": [
+              [
+                105,
+                245
+              ],
+              [
+                125,
+                245
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Load/Rload::RConn:1",
+          "terminals": [
+            "Analog LDO/Load/Pgnd::RConn:1",
+            "Analog LDO/Load/Rload::RConn:1",
+            "Analog LDO/Load/Sw_heavy::RConn:2"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Load/Rload::RConn:1",
+              "to_port": "Analog LDO/Load/Sw_heavy::RConn:2",
+              "points": [
+                [
+                  190,
+                  190
+                ],
+                [
+                  190,
+                  265
+                ],
+                [
+                  255,
+                  265
+                ],
+                [
+                  255,
+                  234
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Load/Pgnd::RConn:1",
+              "points": [
+                [
+                  190,
+                  265
+                ],
+                [
+                  190,
+                  291
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Load/Pvout::RConn:1",
+          "terminals": [
+            "Analog LDO/Load/Pvout::RConn:1",
+            "Analog LDO/Load/Rheavy::LConn:1",
+            "Analog LDO/Load/Rload::LConn:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Load/Pvout::RConn:1",
+              "to_port": "Analog LDO/Load/Rheavy::LConn:1",
+              "points": [
+                [
+                  190,
+                  90
+                ],
+                [
+                  190,
+                  120
+                ],
+                [
+                  265,
+                  120
+                ],
+                [
+                  265,
+                  131
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Load/Rload::LConn:1",
+              "points": [
+                [
+                  190,
+                  120
+                ],
+                [
+                  190,
+                  131
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Load/Rheavy::RConn:1",
+          "terminals": [
+            "Analog LDO/Load/Rheavy::RConn:1",
+            "Analog LDO/Load/Sw_heavy::LConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Load/Rheavy::RConn:1",
+            "to_port": "Analog LDO/Load/Sw_heavy::LConn:1",
+            "points": [
+              [
+                265,
+                190
+              ],
+              [
+                265,
+                186
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Load/hi2ps::RConn:1",
+          "terminals": [
+            "Analog LDO/Load/Sw_heavy::RConn:1",
+            "Analog LDO/Load/hi2ps::RConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Load/hi2ps::RConn:1",
+            "to_port": "Analog LDO/Load/Sw_heavy::RConn:1",
+            "points": [
+              [
+                160,
+                245
+              ],
+              [
+                275,
+                245
+              ],
+              [
+                275,
+                234
+              ]
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "path": "Analog LDO/Pass",
+      "zoom": "255",
+      "nets": [
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Pass/en::Outport:1",
+          "terminals": [
+            "Analog LDO/Pass/en::Outport:1",
+            "Analog LDO/Pass/en_gate::Inport:2"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/en::Outport:1",
+            "to_port": "Analog LDO/Pass/en_gate::Inport:2",
+            "points": [
+              [
+                420,
+                220
+              ],
+              [
+                435,
+                220
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Pass/en_gate::Outport:1",
+          "terminals": [
+            "Analog LDO/Pass/Icmd2PS::Inport:1",
+            "Analog LDO/Pass/en_gate::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/en_gate::Outport:1",
+            "to_port": "Analog LDO/Pass/Icmd2PS::Inport:1",
+            "points": [
+              [
+                485,
+                210
+              ],
+              [
+                515,
+                210
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Pass/gm_pass::Outport:1",
+          "terminals": [
+            "Analog LDO/Pass/gm_pass::Outport:1",
+            "Analog LDO/Pass/ipass_limit::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/gm_pass::Outport:1",
+            "to_port": "Analog LDO/Pass/ipass_limit::Inport:1",
+            "points": [
+              [
+                280,
+                200
+              ],
+              [
+                305,
+                200
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Pass/ipass_limit::Outport:1",
+          "terminals": [
+            "Analog LDO/Pass/en_gate::Inport:1",
+            "Analog LDO/Pass/ipass_limit::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/ipass_limit::Outport:1",
+            "to_port": "Analog LDO/Pass/en_gate::Inport:1",
+            "points": [
+              [
+                365,
+                200
+              ],
+              [
+                435,
+                200
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Pass/vctrl::Outport:1",
+          "terminals": [
+            "Analog LDO/Pass/gm_pass::Inport:1",
+            "Analog LDO/Pass/vctrl::Outport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/vctrl::Outport:1",
+            "to_port": "Analog LDO/Pass/gm_pass::Inport:1",
+            "points": [
+              [
+                200,
+                200
+              ],
+              [
+                220,
+                200
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Pass/Icmd2PS::RConn:1",
+          "terminals": [
+            "Analog LDO/Pass/Icmd2PS::RConn:1",
+            "Analog LDO/Pass/Ipass::RConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/Icmd2PS::RConn:1",
+            "to_port": "Analog LDO/Pass/Ipass::RConn:1",
+            "points": [
+              [
+                550,
+                210
+              ],
+              [
+                616,
+                210
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Pass/Ipass::LConn:1",
+          "terminals": [
+            "Analog LDO/Pass/Ipass::LConn:1",
+            "Analog LDO/Pass/Pvout::RConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/Ipass::LConn:1",
+            "to_port": "Analog LDO/Pass/Pvout::RConn:1",
+            "points": [
+              [
+                675,
+                220
+              ],
+              [
+                681,
+                220
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Pass/Pvin::RConn:1",
+          "terminals": [
+            "Analog LDO/Pass/Ipass::RConn:2",
+            "Analog LDO/Pass/Pvin::RConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Pass/Pvin::RConn:1",
+            "to_port": "Analog LDO/Pass/Ipass::RConn:2",
+            "points": [
+              [
+                610,
+                230
+              ],
+              [
+                616,
+                230
+              ]
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "path": "Analog LDO/Rdiv",
+      "zoom": "315",
+      "nets": [
+        {
+          "kind": "signal",
+          "root": "Analog LDO/Rdiv/vfb2sim::Outport:1",
+          "terminals": [
+            "Analog LDO/Rdiv/vfb2sim::Outport:1",
+            "Analog LDO/Rdiv/vfb::Inport:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Rdiv/vfb2sim::Outport:1",
+            "to_port": "Analog LDO/Rdiv/vfb::Inport:1",
+            "points": [
+              [
+                445,
+                360
+              ],
+              [
+                460,
+                360
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Rdiv/Rbot::RConn:1",
+          "terminals": [
+            "Analog LDO/Rdiv/Pgnd::RConn:1",
+            "Analog LDO/Rdiv/Rbot::RConn:1",
+            "Analog LDO/Rdiv/Vsense_vfb::RConn:2"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Rdiv/Rbot::RConn:1",
+              "to_port": "Analog LDO/Rdiv/Vsense_vfb::RConn:2",
+              "points": [
+                [
+                  300,
+                  325
+                ],
+                [
+                  300,
+                  343
+                ],
+                [
+                  380,
+                  343
+                ],
+                [
+                  380,
+                  329
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Rdiv/Pgnd::RConn:1",
+              "points": [
+                [
+                  300,
+                  343
+                ],
+                [
+                  300,
+                  376
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Rdiv/Pvout::RConn:1",
+          "terminals": [
+            "Analog LDO/Rdiv/Pvout::RConn:1",
+            "Analog LDO/Rdiv/Rtop::LConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Rdiv/Pvout::RConn:1",
+            "to_port": "Analog LDO/Rdiv/Rtop::LConn:1",
+            "points": [
+              [
+                300,
+                175
+              ],
+              [
+                300,
+                176
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Rdiv/Rtop::RConn:1",
+          "terminals": [
+            "Analog LDO/Rdiv/Rbot::LConn:1",
+            "Analog LDO/Rdiv/Rtop::RConn:1",
+            "Analog LDO/Rdiv/Vsense_vfb::LConn:1"
+          ],
+          "paths": [
+            {
+              "from_port": "Analog LDO/Rdiv/Rtop::RConn:1",
+              "to_port": "Analog LDO/Rdiv/Vsense_vfb::LConn:1",
+              "points": [
+                [
+                  300,
+                  235
+                ],
+                [
+                  300,
+                  245
+                ],
+                [
+                  370,
+                  245
+                ],
+                [
+                  370,
+                  281
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "Analog LDO/Rdiv/Rbot::LConn:1",
+              "points": [
+                [
+                  300,
+                  245
+                ],
+                [
+                  300,
+                  266
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "physical",
+          "root": "Analog LDO/Rdiv/Vsense_vfb::RConn:1",
+          "terminals": [
+            "Analog LDO/Rdiv/Vsense_vfb::RConn:1",
+            "Analog LDO/Rdiv/vfb2sim::LConn:1"
+          ],
+          "paths": {
+            "from_port": "Analog LDO/Rdiv/Vsense_vfb::RConn:1",
+            "to_port": "Analog LDO/Rdiv/vfb2sim::LConn:1",
+            "points": [
+              [
+                360,
+                340
+              ],
+              [
+                360,
+                360
+              ],
+              [
+                421,
+                360
+              ]
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "path": "pg_cmp",
+      "zoom": "142",
+      "nets": [
+        {
+          "kind": "signal",
+          "root": "pg_cmp/fall::Outport:1",
+          "terminals": [
+            "pg_cmp/fall::Outport:1",
+            "pg_cmp/not_fall::Inport:1"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/fall::Outport:1",
+            "to_port": "pg_cmp/not_fall::Inport:1",
+            "points": [
+              [
+                285,
+                260
+              ],
+              [
+                320,
+                260
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/hold_high::Outport:1",
+          "terminals": [
+            "pg_cmp/hold_high::Outport:1",
+            "pg_cmp/next::Inport:2"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/hold_high::Outport:1",
+            "to_port": "pg_cmp/next::Inport:2",
+            "points": [
+              [
+                530,
+                245
+              ],
+              [
+                543,
+                245
+              ],
+              [
+                543,
+                190
+              ],
+              [
+                560,
+                190
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/next::Outport:1",
+          "terminals": [
+            "pg_cmp/next::Outport:1",
+            "pg_cmp/prev::Inport:1",
+            "pg_cmp/to_double::Inport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "pg_cmp/next::Outport:1",
+              "to_port": "pg_cmp/prev::Inport:1",
+              "points": [
+                [
+                  630,
+                  175
+                ],
+                [
+                  655,
+                  175
+                ],
+                [
+                  655,
+                  73
+                ],
+                [
+                  371,
+                  73
+                ],
+                [
+                  371,
+                  230
+                ],
+                [
+                  390,
+                  230
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "pg_cmp/to_double::Inport:1",
+              "points": [
+                [
+                  655,
+                  175
+                ],
+                [
+                  695,
+                  175
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/not_fall::Outport:1",
+          "terminals": [
+            "pg_cmp/hold_high::Inport:2",
+            "pg_cmp/not_fall::Outport:1"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/not_fall::Outport:1",
+            "to_port": "pg_cmp/hold_high::Inport:2",
+            "points": [
+              [
+                370,
+                260
+              ],
+              [
+                460,
+                260
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/pg_high::Outport:1",
+          "terminals": [
+            "pg_cmp/pg_high::Outport:1",
+            "pg_cmp/rise::Inport:2"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/pg_high::Outport:1",
+            "to_port": "pg_cmp/rise::Inport:2",
+            "points": [
+              [
+                185,
+                175
+              ],
+              [
+                215,
+                175
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/pg_low::Outport:1",
+          "terminals": [
+            "pg_cmp/fall::Inport:2",
+            "pg_cmp/pg_low::Outport:1"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/pg_low::Outport:1",
+            "to_port": "pg_cmp/fall::Inport:2",
+            "points": [
+              [
+                185,
+                275
+              ],
+              [
+                215,
+                275
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/prev::Outport:1",
+          "terminals": [
+            "pg_cmp/hold_high::Inport:1",
+            "pg_cmp/prev::Outport:1"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/prev::Outport:1",
+            "to_port": "pg_cmp/hold_high::Inport:1",
+            "points": [
+              [
+                440,
+                230
+              ],
+              [
+                460,
+                230
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/rise::Outport:1",
+          "terminals": [
+            "pg_cmp/next::Inport:1",
+            "pg_cmp/rise::Outport:1"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/rise::Outport:1",
+            "to_port": "pg_cmp/next::Inport:1",
+            "points": [
+              [
+                285,
+                160
+              ],
+              [
+                560,
+                160
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/to_double::Outport:1",
+          "terminals": [
+            "pg_cmp/pg_cmp::Inport:1",
+            "pg_cmp/to_double::Outport:1"
+          ],
+          "paths": {
+            "from_port": "pg_cmp/to_double::Outport:1",
+            "to_port": "pg_cmp/pg_cmp::Inport:1",
+            "points": [
+              [
+                775,
+                175
+              ],
+              [
+                800,
+                175
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "signal",
+          "root": "pg_cmp/vout::Outport:1",
+          "terminals": [
+            "pg_cmp/fall::Inport:1",
+            "pg_cmp/rise::Inport:1",
+            "pg_cmp/vout::Outport:1"
+          ],
+          "paths": [
+            {
+              "from_port": "pg_cmp/vout::Outport:1",
+              "to_port": "pg_cmp/rise::Inport:1",
+              "points": [
+                [
+                  90,
+                  200
+                ],
+                [
+                  110,
+                  200
+                ],
+                [
+                  110,
+                  145
+                ],
+                [
+                  215,
+                  145
+                ]
+              ]
+            },
+            {
+              "from_port": "",
+              "to_port": "pg_cmp/fall::Inport:1",
+              "points": [
+                [
+                  110,
+                  200
+                ],
+                [
+                  110,
+                  245
+                ],
+                [
+                  215,
+                  245
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "annotations": []
+    }
+  ],
+  "charts": {
+    "path": "Supervisor",
+    "zoom": 1.286,
+    "view_limits": [
+      44.226,
+      1421.574,
+      -96.438,
+      780.32
+    ],
+    "states": [
+      {
+        "name": "OFF",
+        "position": [
+          120,
+          300,
+          230,
+          120
+        ],
+        "font_size": 14
+      },
+      {
+        "name": "ON",
+        "position": [
+          1180,
+          300,
+          230,
+          120
+        ],
+        "font_size": 14
+      },
+      {
+        "name": "WAIT",
+        "position": [
+          650,
+          300,
+          230,
+          120
+        ],
+        "font_size": 14
+      }
+    ],
+    "transitions": [
+      {
+        "source": "DEFAULT",
+        "destination": "OFF",
+        "order": 1,
+        "source_clock": 0,
+        "destination_clock": 8.9490650000000009,
+        "source_endpoint": [
+          61.8008,
+          362.0374
+        ],
+        "midpoint": [
+          86.4004,
+          362.0374
+        ],
+        "label_position": [
+          82.801,
+          341.037
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      },
+      {
+        "source": "OFF",
+        "destination": "WAIT",
+        "order": 1,
+        "source_clock": 3,
+        "destination_clock": 9,
+        "source_endpoint": [],
+        "midpoint": [
+          495.5,
+          360
+        ],
+        "label_position": [
+          425,
+          330
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      },
+      {
+        "source": "ON",
+        "destination": "OFF",
+        "order": 1,
+        "source_clock": 0,
+        "destination_clock": 0,
+        "source_endpoint": [],
+        "midpoint": [
+          830.3722,
+          72.216
+        ],
+        "label_position": [
+          749.437,
+          44.846
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      },
+      {
+        "source": "ON",
+        "destination": "OFF",
+        "order": 2,
+        "source_clock": 6,
+        "destination_clock": 6,
+        "source_endpoint": [],
+        "midpoint": [
+          785.3722,
+          603.216
+        ],
+        "label_position": [
+          785.347,
+          622.036
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      },
+      {
+        "source": "ON",
+        "destination": "WAIT",
+        "order": 3,
+        "source_clock": 8.5126375,
+        "destination_clock": 3.4873625000000006,
+        "source_endpoint": [],
+        "midpoint": [
+          1036.7714,
+          410.5887
+        ],
+        "label_position": [
+          996.721,
+          426.001
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      },
+      {
+        "source": "WAIT",
+        "destination": "OFF",
+        "order": 1,
+        "source_clock": 9.4873625,
+        "destination_clock": 2.5126374999999994,
+        "source_endpoint": [],
+        "midpoint": [
+          497.97,
+          290.5887
+        ],
+        "label_position": [
+          469.408,
+          263.198
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      },
+      {
+        "source": "WAIT",
+        "destination": "OFF",
+        "order": 2,
+        "source_clock": 8.5126375,
+        "destination_clock": 3.4873625000000006,
+        "source_endpoint": [],
+        "midpoint": [
+          513.97,
+          405.7887
+        ],
+        "label_position": [
+          473.224,
+          421.42
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      },
+      {
+        "source": "WAIT",
+        "destination": "ON",
+        "order": 3,
+        "source_clock": 3,
+        "destination_clock": 9,
+        "source_endpoint": [],
+        "midpoint": [
+          1025.5,
+          360
+        ],
+        "label_position": [
+          915,
+          325
+        ],
+        "font_size": 13,
+        "arrow_size": 9
+      }
+    ]
+  }
+}
