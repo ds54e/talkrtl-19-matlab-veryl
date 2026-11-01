@@ -1,22 +1,7 @@
 function io = comparison_io()
 io.json = @writejson;
 io.readcsv = @readcsv;
-io.paths = @comparison_paths;
-end
-
-function s = comparison_paths()
-root = fileparts(fileparts(mfilename('fullpath')));
-s.root = root;
-s.reference_dir = fullfile(root, 'results', 'generated', 'reference');
-s.reference_analog = fullfile(s.reference_dir, 'analog.csv');
-s.reference_digital = fullfile(s.reference_dir, 'digital.csv');
-s.sdi_dir = fullfile(root, 'results', 'generated', 'sdi');
-s.reference_session = fullfile(s.sdi_dir, 'reference.mldatx');
-s.comparison_session = fullfile(s.sdi_dir, 'comparison.mldatx');
-s.comparison_dir = fullfile(root, 'results', 'generated', 'comparison');
-s.xezim_dir = fullfile(root, 'results', 'generated', 'xezim');
-s.figure = fullfile(s.comparison_dir, 'overview.png');
-s.result = fullfile(s.comparison_dir, 'comparison.json');
+io.paths = @demo_paths;
 end
 
 function T = readcsv(path)

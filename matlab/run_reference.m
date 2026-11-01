@@ -1,8 +1,9 @@
 function result = run_reference()
 io = reference_io();
 par = ldo_params();
-resdir = fullfile(io.root(), 'results', 'generated', 'reference');
-sdir = fullfile(io.root(), 'results', 'generated', 'sdi');
+paths = demo_paths();
+resdir = paths.reference_dir;
+sdir = paths.sdi_dir;
 
 fprintf('=== reference model: nominal run ===\n');
 Simulink.sdi.clear();

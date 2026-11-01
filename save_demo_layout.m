@@ -2,8 +2,9 @@ function save_demo_layout()
 % Save all diagram and Stateflow layouts in the model opened by open_demo.
 repo = fileparts(mfilename('fullpath'));
 addpath(fullfile(repo, 'matlab'));
-mdl = 'ldo_demo_check';
-file = fullfile(repo, 'model', 'generated', [mdl '.slx']);
+paths = demo_paths();
+mdl = paths.layout_model;
+file = paths.layout_model_file;
 if ~bdIsLoaded(mdl)
     assert(isfile(file), 'talkrtl:LayoutModel', ...
         'Run open_demo first, then adjust the model layout.');

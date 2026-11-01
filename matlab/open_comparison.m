@@ -1,4 +1,4 @@
-function info = open_demo(varargin)
+function info = open_comparison(varargin)
 p = inputParser;
 p.addParameter('Session', '');
 p.addParameter('OpenSdi', true);

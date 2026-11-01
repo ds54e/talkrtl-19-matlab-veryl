@@ -1,16 +1,36 @@
 function info=apply_layout(mdl,file)
-% Apply an approved display profile to a structurally matching loaded model.
-% The model is not saved. Guards, values, sample times and logging are retained.
+% Apply an approved display profile without changing connections or behavior.
+% The loaded model is not saved; runtime configuration and logging are retained.
 if nargin<2
-    root=fileparts(fileparts(mfilename('fullpath')));
-    file=fullfile(root,'model','layout','approved.json');
+    paths=demo_paths();
+    file=paths.layout_file;
 end
 assert(bdIsLoaded(mdl),'Model must be loaded.');
 assert(strcmp(get_param(mdl,'SimulationStatus'),'stopped'),'Stop the simulation first.');
 assert(isfile(file),'talkrtl:LayoutFile','Layout file not found: %s',file);
 approved=jsondecode(fileread(file));
-assert(approved.schema_version==1,'talkrtl:LayoutSchema','Unsupported layout schema.');
+schema=layout_schema();
+assert(approved.schema_version==schema.version,'talkrtl:LayoutSchema','Unsupported layout schema.');
 current=layout_profile(mdl);
+validateProfile(approved,current);
+
+logicBefore=chartLogic(mdl);
+logging=captureLogging(mdl,current.systems);
+applyBlocks(mdl,approved.blocks);
+applySystems(mdl,approved.systems);
+applyCharts(mdl,approved.charts);
+restoreLogging(mdl,current.systems,logging);
+
+after=layout_profile(mdl);
+assert(isequal(layout_contract(current),layout_contract(after)), ...
+    'talkrtl:LayoutConnectivity','Layout changed model connections.');
+assert(isequaln(logicBefore,chartLogic(mdl)),'talkrtl:LayoutLogic','Layout changed chart logic.');
+info=struct('file',file,'blocks',numel(approved.blocks), ...
+    'diagrams',numel(approved.systems),'charts',numel(approved.charts));
+fprintf('Applied approved layout: %d blocks, %d diagrams, %d charts.\n',info.blocks,info.diagrams,info.charts);
+end
+
+function validateProfile(approved,current)
 expected=layout_contract(approved);actual=layout_contract(current);
 if ~isequal(expected,actual)
     missing=setdiff(expected,actual);extra=setdiff(actual,expected);
@@ -18,9 +38,8 @@ if ~isequal(expected,actual)
         'Model and layout differ (%d missing, %d new items). Review the model and capture a matching layout.\n%s', ...
         numel(missing),numel(extra),strjoin([missing(1:min(3,end)),extra(1:min(3,end))],newline));
 end
-allowed={'Position','Orientation','BlockMirror','BlockRotation','NamePlacement','ShowName', ...
-    'FontName','FontSize','FontWeight','FontAngle','ForegroundColor', ...
-    'BackgroundColor','DropShadow','IconShape'};
+schema=layout_schema();
+allowed=schema.graphics;
 % Validate every property before any mutations. JSON never supplies callbacks.
 for b=approved.blocks(:)'
     assert(all(ismember(fieldnames(b.graphics),allowed)),'talkrtl:LayoutSchema','Non-display block property.');
@@ -31,13 +50,14 @@ for b=approved.blocks(:)'
     assert(isempty(b.port_side) || (strcmp(b.type,'PMIOPort') && ismember(b.port_side,{'Left','Right'})), ...
         'Invalid physical port side.');
 end
-logicBefore=chartLogic(mdl);
-logging=captureLogging(mdl,current.systems);
-for b=approved.blocks(:)'
-    if ~isempty(b.port_side),set_param(full(mdl,b.path),'Side',b.port_side);end
 end
-for b=approved.blocks(:)'
-    block=full(mdl,b.path);fields=fieldnames(b.graphics);
+
+function applyBlocks(mdl,blocks)
+for b=blocks(:)'
+    if ~isempty(b.port_side),set_param(modelPath(mdl,b.path),'Side',b.port_side);end
+end
+for b=blocks(:)'
+    block=modelPath(mdl,b.path);fields=fieldnames(b.graphics);
     fields(strcmp(fields,'Position'))=[];
     % Rotation precedes bounds, so the native rotate operation cannot resize
     % the final rectangle. The approved symbol proportions are preserved.
@@ -50,9 +70,12 @@ for b=approved.blocks(:)'
     set_param(block,'BlockRotation',b.graphics.BlockRotation,'BlockMirror',b.graphics.BlockMirror);
     set_param(block,'Position',reshape(b.graphics.Position,1,[]));
 end
-% All geometry has been positioned before any line tree is redrawn.
-for s=approved.systems(:)'
-    sys=full(mdl,s.path);ports=layout_ports(mdl,sys);
+end
+
+function applySystems(mdl,systems)
+% Redraw only after every block and physical interface has been positioned.
+for s=systems(:)'
+    sys=modelPath(mdl,s.path);ports=layout_ports(mdl,sys);
     while true
         ls=find_system(sys,'LookUnderMasks','all','FindAll','on','SearchDepth',1,'Type','line');
         if isempty(ls),break;end
@@ -80,8 +103,11 @@ for s=approved.systems(:)'
     end
     set_param(sys,'ZoomFactor',s.zoom);
 end
-for c=approved.charts(:)'
-    chart=sfroot().find('-isa','Stateflow.Chart','Path',full(mdl,c.path));
+end
+
+function applyCharts(mdl,charts)
+for c=charts(:)'
+    chart=sfroot().find('-isa','Stateflow.Chart','Path',modelPath(mdl,c.path));
     for s=c.states(:)'
         state=chart.find('-isa','Stateflow.State','Name',s.name);
         state.Position=reshape(s.position,1,[]);state.FontSize=s.font_size;
@@ -107,15 +133,9 @@ for c=approved.charts(:)'
     % alone can be recalculated from a fresh chart's old viewport on save.
     sf('set',chart.Id,'.viewLimits',reshape(c.view_limits,1,[]),'.zoomFactor',c.zoom);
 end
-restoreLogging(mdl,current.systems,logging);
-after=layout_profile(mdl);
-assert(isequal(actual,layout_contract(after)),'talkrtl:LayoutConnectivity','Layout changed model connections.');
-assert(isequaln(logicBefore,chartLogic(mdl)),'talkrtl:LayoutLogic','Layout changed chart logic.');
-info=struct('file',file,'blocks',numel(approved.blocks), ...
-    'diagrams',numel(approved.systems),'charts',numel(approved.charts));
-fprintf('Applied approved layout: %d blocks, %d diagrams, %d charts.\n',info.blocks,info.diagrams,info.charts);
 end
-function path=full(mdl,relative)
+
+function path=modelPath(mdl,relative)
 path=mdl;if ~isempty(relative),path=[mdl '/' relative];end
 end
 function h=terminal(ports,id)
@@ -128,7 +148,7 @@ saved=struct('id',{},'properties',{});
 props={'Name','DataLogging','DataLoggingNameMode','DataLoggingName', ...
     'DataLoggingDecimateData','DataLoggingDecimation','DataLoggingLimitDataPoints','DataLoggingMaxPoints'};
 for s=systems(:)'
-    ports=layout_ports(mdl,full(mdl,s.path));
+    ports=layout_ports(mdl,modelPath(mdl,s.path));
     for p=ports(:)'
         if ~strcmp(p.group,'Outport'),continue;end
         meta=get_param(p.handle,'ObjectParameters');values=struct();
@@ -141,7 +161,7 @@ end
 end
 function restoreLogging(mdl,systems,saved)
 ports=[];
-for s=systems(:)',ports=[ports layout_ports(mdl,full(mdl,s.path))];end %#ok<AGROW>
+for s=systems(:)',ports=[ports layout_ports(mdl,modelPath(mdl,s.path))];end %#ok<AGROW>
 for item=saved(:)'
     h=terminal(ports,item.id);
     for field=fieldnames(item.properties)'

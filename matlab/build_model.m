@@ -1,20 +1,20 @@
 function info = build_model(varargin)
 % block path / parameter 名は R2026a 実機で確認したものだけを使う。
-root = fileparts(fileparts(mfilename('fullpath')));
+paths = demo_paths();
 p = inputParser;
 p.addParameter('FixedStep', []);
 p.addParameter('StopTime', []);
 p.addParameter('Supervisor', true);
-p.addParameter('ModelName', 'ldo_demo');
+p.addParameter('ModelName', paths.reference_model);
 p.addParameter('Save', true);
-p.addParameter('LayoutFile', fullfile(root, 'model', 'layout', 'approved.json'));
+p.addParameter('LayoutFile', paths.layout_file);
 p.parse(varargin{:});
 o = p.Results;
 par = ldo_params();
 if isempty(o.FixedStep), o.FixedStep = par.solver_fixed_step; end
 if isempty(o.StopTime), o.StopTime = par.t_stop; end
 
-outdir = fullfile(root, 'model', 'generated');
+outdir = paths.model_dir;
 if ~isfolder(outdir), mkdir(outdir); end
 u = model_util();
 mdl = o.ModelName;

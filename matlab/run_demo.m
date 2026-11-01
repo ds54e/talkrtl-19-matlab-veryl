@@ -3,8 +3,8 @@ p = inputParser;
 p.addParameter('SkipReference', false);
 p.parse(varargin{:});
 
-root = fileparts(fileparts(mfilename('fullpath')));
-xezim = fullfile(root, 'results', 'generated', 'xezim');
+paths = demo_paths();
+xezim = paths.xezim_dir;
 required = {'rnm_nominal.csv', 'rnm_nominal_full.csv', 'system_nominal.csv'};
 missing = {};
 for k = 1:numel(required)

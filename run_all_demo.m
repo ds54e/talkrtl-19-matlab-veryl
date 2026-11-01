@@ -2,7 +2,9 @@ function result = run_all_demo()
 % Run RTL generation checks, Xezim, Simulink and waveform comparison.
 repo = fileparts(mfilename('fullpath'));
 addpath(fullfile(repo, 'matlab'));
-if bdIsLoaded('ldo_demo') && strcmp(get_param('ldo_demo', 'Dirty'), 'on')
+paths = demo_paths();
+mdl = paths.reference_model;
+if bdIsLoaded(mdl) && strcmp(get_param(mdl, 'Dirty'), 'on')
     error('talkrtl:UnsavedModel', 'Save or close ldo_demo before running the full demo.');
 end
 assert(ispc, 'talkrtl:Platform', 'Run this entry point from Windows MATLAB with WSL.');
@@ -14,7 +16,7 @@ assert(status == 0, 'talkrtl:Toolchain', 'RTL generation or Xezim failed. See th
 result = run_demo();
 assert(result.reference.pass && result.compare.pass, ...
     'talkrtl:DemoFailed', 'Reference or waveform comparison failed. See the output above.');
-open_system('ldo_demo');
+open_system(mdl);
 Simulink.sdi.view;
 fprintf('FULL_DEMO_PASS: RTL, Xezim, reference and comparison all passed.\n');
 end

@@ -6,7 +6,8 @@ io.csv = @writecsv;
 end
 
 function r = rootdir()
-r = fileparts(fileparts(mfilename('fullpath')));
+paths = demo_paths();
+r = paths.root;
 end
 
 function out = runwith(mdl, t, U, varargin)

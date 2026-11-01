@@ -1,15 +1,14 @@
 function profile=layout_profile(mdl)
 % Read appearance only. Runtime handles and functional parameters are excluded.
 assert(bdIsLoaded(mdl),'Model must be loaded.');
-profile=struct('schema_version',1,'matlab_release',version('-release'), ...
+schema=layout_schema();
+profile=struct('schema_version',schema.version,'matlab_release',version('-release'), ...
     'blocks',struct([]),'systems',struct([]),'charts',struct([]));
 charts=sfroot().find('-isa','Stateflow.Chart');
 charts=charts(arrayfun(@(c)startsWith(c.Path,[mdl '/']),charts));
 chartPaths=arrayfun(@(c)c.Path,charts,'UniformOutput',false);
 pending={mdl};
-fields={'Position','Orientation','BlockMirror','BlockRotation','NamePlacement','ShowName', ...
-    'FontName','FontSize','FontWeight','FontAngle','ForegroundColor', ...
-    'BackgroundColor','DropShadow','IconShape'};
+fields=schema.graphics;
 while ~isempty(pending)
     sys=pending{1};pending(1)=[];
     blocks=find_system(sys,'LookUnderMasks','all','FollowLinks','off', ...
@@ -20,7 +19,7 @@ while ~isempty(pending)
         block=blocks{bi};path=relative(block,mdl);
         meta=get_param(block,'ObjectParameters');graphics=struct();
         for field=fields
-            if isfield(meta,field{1}) || ismember(field{1},{'BlockMirror','BlockRotation'})
+            if isfield(meta,field{1}) || ismember(field{1},schema.native_graphics)
                 graphics.(field{1})=get_param(block,field{1});
             end
         end

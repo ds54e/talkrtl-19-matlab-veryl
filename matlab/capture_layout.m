@@ -1,9 +1,9 @@
 function profile=capture_layout(mdl,file)
 % Save the current GUI layout. Save/reload the model first for stable geometry.
 % Example: capture_layout('ldo_demo', 'model/layout/approved.json')
-root=fileparts(fileparts(mfilename('fullpath')));
-defaultFile=fullfile(root,'model','layout','approved.json');
-if nargin<1 || isempty(mdl),mdl='ldo_demo_check';end
+paths=demo_paths();
+defaultFile=paths.layout_file;
+if nargin<1 || isempty(mdl),mdl=paths.layout_model;end
 if nargin<2,file=defaultFile;end
 assert(bdIsLoaded(mdl),'talkrtl:LayoutModel','Open the model to capture first.');
 mdl=get_param(bdroot(mdl),'Name');
