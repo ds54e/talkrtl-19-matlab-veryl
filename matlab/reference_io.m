@@ -17,13 +17,14 @@ assert(size(U, 1) == numel(t), 'talkrtl:IO', 'input length mismatch');
 n = numel(inports(mdl));
 assert(size(U, 2) == n, 'talkrtl:IO', ...
     'input column count %d != root inports %d', size(U, 2), n);
-in = [t(:), U];
-assignin('base', 'talkrtl_external_input', in);
-set_param(mdl, 'LoadExternalInput', 'on', 'ExternalInput', 'talkrtl_external_input');
-for k = 1:2:numel(varargin)
-    set_param(mdl, varargin{k}, varargin{k + 1});
+% Keep simulation-only settings outside the model so running the demo does
+% not mark the saved diagram as modified or leave base-workspace inputs.
+input = Simulink.SimulationInput(mdl);
+input = input.setExternalInput([t(:), U]);
+if ~isempty(varargin)
+    input = input.setModelParameter(varargin{:});
 end
-out = sim(mdl);
+out = sim(input);
 end
 
 function names = inports(mdl)

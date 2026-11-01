@@ -2,9 +2,8 @@ function s = demo_paths()
 % Repository-relative names and generated artifact locations shared by the demo.
 s.root = fileparts(fileparts(mfilename('fullpath')));
 s.reference_model = 'ldo_demo';
-s.layout_model = 'ldo_demo_check';
 s.model_dir = fullfile(s.root, 'model', 'generated');
-s.layout_model_file = fullfile(s.model_dir, [s.layout_model '.slx']);
+s.model_file = fullfile(s.model_dir, [s.reference_model '.slx']);
 s.layout_file = fullfile(s.root, 'model', 'layout', 'approved.json');
 s.results_dir = fullfile(s.root, 'results', 'generated');
 s.reference_dir = fullfile(s.results_dir, 'reference');

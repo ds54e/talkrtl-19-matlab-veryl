@@ -1,13 +1,13 @@
 function save_demo_layout()
-% Save all diagram and Stateflow layouts in the model opened by open_demo.
-repo = fileparts(mfilename('fullpath'));
+% Maintainer tool: save all layouts in the model opened by start_demo.
+repo = fileparts(fileparts(mfilename('fullpath')));
 addpath(fullfile(repo, 'matlab'));
 paths = demo_paths();
-mdl = paths.layout_model;
-file = paths.layout_model_file;
+mdl = paths.reference_model;
+file = paths.model_file;
 if ~bdIsLoaded(mdl)
     assert(isfile(file), 'talkrtl:LayoutModel', ...
-        'Run open_demo first, then adjust the model layout.');
+        'Run start_demo first, then adjust the model layout.');
     load_system(file);
 end
 assert(strcmp(get_param(mdl, 'SimulationStatus'), 'stopped'), ...
@@ -24,5 +24,5 @@ open_system(mdl);
 profile = capture_layout(mdl);
 fprintf('Saved whole-model layout: %d diagrams, %d Stateflow charts.\n', ...
     numel(profile.systems), numel(profile.charts));
-fprintf('Run open_demo to regenerate the model.\n');
+fprintf('Run start_demo to regenerate the model.\n');
 end

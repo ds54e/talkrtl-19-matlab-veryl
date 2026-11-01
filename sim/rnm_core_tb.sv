@@ -57,7 +57,8 @@ module rnm_core_tb;
     endtask
 
     task automatic record_step();
-        $fwrite(full_fd, "%.17g,%.17g,%.17g,%0d\n", $realtime, vout, vctrl, pg_cmp);
+        $fwrite(full_fd, "%.17g,%.17g,%.17g,%.17g,%.17g,%0d\n",
+                $realtime, vout, vfb, vctrl, ipass, pg_cmp);
     endtask
 
     task automatic record(input int tick);
@@ -114,7 +115,7 @@ module rnm_core_tb;
         // Full CSV stays on the model step grid; reference scalars are 10 ns-resolution.
         full_fd = $fopen(full_path, "w");
         check(full_fd != 0, "full CSV opened for writing");
-        $fwrite(full_fd, "time_ns,vout,vctrl,pg_cmp\n");
+        $fwrite(full_fd, "time_ns,vout,vfb,vctrl,ipass,pg_cmp\n");
 
         u_ldo.rst_state();
         en      = env_en(0);

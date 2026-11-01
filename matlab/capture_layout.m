@@ -3,12 +3,12 @@ function profile=capture_layout(mdl,file)
 % Example: capture_layout('ldo_demo', 'model/layout/approved.json')
 paths=demo_paths();
 defaultFile=paths.layout_file;
-if nargin<1 || isempty(mdl),mdl=paths.layout_model;end
+if nargin<1 || isempty(mdl),mdl=paths.reference_model;end
 if nargin<2,file=defaultFile;end
 assert(bdIsLoaded(mdl),'talkrtl:LayoutModel','Open the model to capture first.');
 mdl=get_param(bdroot(mdl),'Name');
 assert(strcmp(get_param(mdl,'BlockDiagramType'),'model'), ...
-    'talkrtl:LayoutModel','Cannot capture a library. Use capture_layout(''ldo_demo_check'').');
+    'talkrtl:LayoutModel','Cannot capture a library. Use save_demo_layout on the generated demo model.');
 profile=layout_profile(mdl);
 if strcmp(strrep(char(file),'\','/'),strrep(defaultFile,'\','/'))
     validateDemo(profile);
@@ -32,7 +32,7 @@ expected=layout_contract(layout_profile(probe));
 assert(isequal(expected,layout_contract(profile)), ...
     'talkrtl:LayoutModel', ...
     ['This is not the generated LDO model structure. The approved JSON was not changed. ' ...
-     'Use capture_layout(''ldo_demo_check'') for the layout-check model. ' ...
+     'Use save_demo_layout on the generated demo model. ' ...
      'For intentional structural changes, capture to a separate JSON file.']);
 end
 function closeProbe(mdl)

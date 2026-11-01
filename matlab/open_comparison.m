@@ -22,6 +22,9 @@ end
 Simulink.sdi.clear();
 loaded = Simulink.sdi.load(sdiPath);
 ids = Simulink.sdi.getAllRunIDs();
+assert(numel(ids) == 2, 'talkrtl:ComparisonSignals', ...
+    'Expected reference and implementation runs. Run start_demo to regenerate the session.');
+[~, comparison] = compare_sdi_runs(ids(1), ids(2));
 
 Simulink.sdi.clearAllSubPlots();
 Simulink.sdi.setSubPlotLayout(4, 1);
@@ -38,10 +41,11 @@ for k = 1:numel(ids)
 end
 
 if p.Results.OpenSdi
-    Simulink.sdi.view;
+    Simulink.sdi.view(Simulink.sdi.GUITabType.CompareRuns);
 end
 
 info = struct('session', sdiPath, 'loaded', logical(loaded), ...
-    'run_count', numel(ids), 'sdi_visible', logical(p.Results.OpenSdi));
+    'run_count', numel(ids), 'sdi_visible', logical(p.Results.OpenSdi), ...
+    'comparison', comparison);
 fprintf('SDI session: %s\n', sdiPath);
 end

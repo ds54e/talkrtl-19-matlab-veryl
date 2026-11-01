@@ -1,6 +1,6 @@
 function result = run_all_demo()
-% Run RTL generation checks, Xezim, Simulink and waveform comparison.
-repo = fileparts(mfilename('fullpath'));
+% Implementation of the start_demo entry point.
+repo = fileparts(fileparts(mfilename('fullpath')));
 addpath(fullfile(repo, 'matlab'));
 paths = demo_paths();
 mdl = paths.reference_model;
@@ -17,6 +17,6 @@ result = run_demo();
 assert(result.reference.pass && result.compare.pass, ...
     'talkrtl:DemoFailed', 'Reference or waveform comparison failed. See the output above.');
 open_system(mdl);
-Simulink.sdi.view;
+Simulink.sdi.view(Simulink.sdi.GUITabType.CompareRuns);
 fprintf('FULL_DEMO_PASS: RTL, Xezim, reference and comparison all passed.\n');
 end

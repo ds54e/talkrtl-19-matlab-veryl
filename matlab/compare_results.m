@@ -1,8 +1,9 @@
 function result = compare_results(io)
 s = io.paths();
 
-TOL_SCALAR_MV = 0.1;
-TOL_CROSSING_NS = 10.0;
+policy = comparison_policy();
+TOL_SCALAR_MV = policy.scalar_mV;
+TOL_CROSSING_NS = policy.crossing_ns;
 
 a0 = io.readcsv(s.reference_analog);
 a1 = io.readcsv(fullfile(s.xezim_dir, 'rnm_nominal_full.csv'));
@@ -23,6 +24,16 @@ v0 = a0.vout;
 v1 = a1.vout;
 dv = abs(v1 - v0);
 [worst, wi] = max(dv);
+
+% The same per-signal, pointwise limits are used by SDI Compare.
+for name = policy.analog
+    field = name{1};
+    delta = abs(a1.(field) - a0.(field));
+    limit = policy.absolute.(field);
+    C = push(C, ['analog.' field '.pointwise'], ...
+        all(isfinite(delta)) && all(delta <= limit), ...
+        sprintf('max abs difference %.9g, absolute tolerance %.9g', max(delta), limit));
+end
 
 m15_0 = mean(v0(t0 >= 15000 & t0 <= 24000));
 m15_1 = mean(v1(t1 >= 15000 & t1 <= 24000));
@@ -80,6 +91,9 @@ end
 C = push(C, 'digital.exact', digital_exact, sprintf( ...
     'mismatches tick/rst/en/pg_cmp/state/pgood = %g/%g/%g/%g/%g/%g', ...
     mm.tick, mm.rst, mm.en, mm.pg_cmp, mm.state, mm.pgood));
+load_hi = interp1(t0, a0.load_hi, round(d1.time_ns), 'previous');
+C = push(C, 'digital.load_hi', isequal(load_hi, double(d1.load_hi)), ...
+    'load_hi must match exactly');
 
 analog = struct('samples', numel(v1), ...
     'pointwise_max_mV', worst * 1e3, ...
