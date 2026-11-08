@@ -32,7 +32,7 @@ module ldo_rnm #(
     real vfb_q;
     real ipass_q;
 
-    pg_cmp_rnm u_cmp (.q(pg_cmp));
+    pg_cmp_rnm u_cmp (.v(vout), .q(pg_cmp));
 
     task automatic deriv(
         input  real  v,
@@ -93,7 +93,7 @@ module ldo_rnm #(
         ipass   = ipass_q;
     endtask
 
-    // Both derivatives use the same pre-update state; pg_cmp updates once per macro-step.
+    // Both derivatives use the same pre-update state.
     task automatic step(input real h);
         real dt;
         real dv;
@@ -108,16 +108,14 @@ module ldo_rnm #(
         end
 
         observe();
-        u_cmp.update(vout_q);
     endtask
 
     // Analog state is cleared only on cold start; digital reset does not touch it.
-    task automatic rst_state();
+    initial begin
         vout_q  = 0.0;
         vctrl_q = 0.0;
-        u_cmp.rst();
         observe();
-    endtask
+    end
 
-    initial rst_state();
+    always #10 step(10e-9);
 endmodule

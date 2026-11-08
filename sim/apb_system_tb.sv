@@ -45,69 +45,92 @@ module apb_system_tb;
         .pgood (pgood), .state (state)
     );
 
-    task automatic record_digital(input int tick);
+    task automatic record_digital(input int n);
         $fwrite(digital_fd, "%0d,%0d,%0d,%0d,%0d,%0d,%0d,%0d\n",
-                tick, tick * CLK_NS, rst, ctrl_en, cap_pg_cmp, state, pgood, load_hi);
+                n, n * CLK_NS, rst, ctrl_en, cap_pg_cmp, state, pgood, load_hi);
+    endtask
+
+    // Active-region model/comparator work settles before NBA clock/load changes;
+    // the supervisor then samples pg_cmp, and CSR NBAs affect the next step.
+    initial begin
+        repeat (2) begin
+            #50 clk <= 1'b1;
+            #50 clk <= 1'b0;
+        end
+        #50;
+        forever #50 clk <= ~clk;
+    end
+
+    always @(posedge clk) cap_pg_cmp = pg_cmp;
+
+    // Clock edges since scenario time zero (the end of reset).
+    int tick = 0;
+    always @(posedge clk) if (!rst) tick <= tick + 1;
+
+    // Wait for the falling edge in the middle of tick n.
+    task automatic mid_tick(input int n);
+        wait (tick == n);
+        @(negedge clk);
     endtask
 
     initial begin
-        analog_fd = $fopen("analog.csv", "w");
-        digital_fd = $fopen("digital.csv", "w");
-        $fwrite(analog_fd, "time_ns,vout,vfb,vctrl,ipass,pg_cmp,en,load_hi\n");
-        $fwrite(digital_fd, "tick,time_ns,rst,en,pg_cmp,state,pgood,load_hi\n");
+        rst <= 1'b1;
+        #200 rst <= 1'b0; // Scenario time zero; en=0 keeps analog derivatives zero.
 
-        // Reset before scenario time zero, without advancing analog state.
-        u_ldo.rst_state();
-        rst = 1'b1;
-        repeat (2) begin
-            #50 clk = 1'b1;
-            #50 clk = 1'b0;
+        // APB setup + access phases raise CTRL.EN at tick 20 (2 us).
+        mid_tick(18);
+        apb_start = 1'b1;
+        apb_write = 1'b1;
+        apb_addr = 3'h0; // CTRL.EN
+        apb_wdata = 32'h1;
+        @(negedge clk) apb_start = 1'b0;
+
+        mid_tick(200);
+        if (ctrl_en !== 1'b1 || vout < 0.87 || pgood !== 1'b1)
+            $fatal(1, "APB_SYSTEM_FAIL: CTRL.EN write did not enable the LDO");
+        $display("APB_SYSTEM: CTRL.EN write enabled the LDO and PGOOD");
+        apb_start = 1'b1;
+        apb_write = 1'b0;
+        apb_addr = 3'h4; // STATUS.PGOOD
+        @(negedge clk) apb_start = 1'b0;
+    end
+
+    initial begin
+        #200;
+        #25000 load_hi <= 1'b1;
+        #10000 load_hi <= 1'b0;
+    end
+
+    always @(negedge clk) begin
+        if (apb_done && !apb_write) begin
+            if (apb_rdata[0] !== pgood)
+                $fatal(1, "APB_SYSTEM_FAIL: STATUS.PGOOD does not match pgood");
+            $display("APB_SYSTEM: STATUS.PGOOD read matches pgood=%0d", pgood);
+            status_read = 1'b1;
         end
-        rst = 1'b0;
+    end
 
-        // Include both analog endpoints and the final digital half-clock sample.
-        for (int t_ns = 0; t_ns <= END_NS + CLK_NS / 2; t_ns += DT_NS) begin
-            if (t_ns > 0) begin
-                #DT_NS;
-                u_ldo.step(DT_NS * 1e-9);
-            end
-            if (t_ns % CLK_NS == 0) begin
-                load_hi = (t_ns >= 25000 && t_ns < 35000);
-                cap_pg_cmp = pg_cmp;
-                if (t_ns == 0) record_digital(0);
-                else clk = 1'b1;
-            end
-            if (t_ns % CLK_NS == CLK_NS / 2) begin
-                clk = 1'b0;
-                if (t_ns >= CLK_NS) record_digital(t_ns / CLK_NS);
-                if (apb_done && !apb_write) begin
-                    if (apb_rdata[0] !== pgood)
-                        $fatal(1, "APB_SYSTEM_FAIL: STATUS.PGOOD does not match pgood");
-                    $display("APB_SYSTEM: STATUS.PGOOD read matches pgood=%0d", pgood);
-                    status_read = 1'b1;
-                end
-                // Issue after tick 18 so APB setup + access raise CTRL.EN at tick 20.
-                apb_start = (t_ns / CLK_NS == 18 || t_ns / CLK_NS == 200);
-                case (t_ns / CLK_NS)
-                    18: begin
-                        apb_write = 1'b1;
-                        apb_addr = 3'h0; // CTRL.EN
-                        apb_wdata = 32'h1;
-                    end
-                    200: begin
-                        if (ctrl_en !== 1'b1 || vout < 0.87 || pgood !== 1'b1)
-                            $fatal(1, "APB_SYSTEM_FAIL: CTRL.EN write did not enable the LDO");
-                        $display("APB_SYSTEM: CTRL.EN write enabled the LDO and PGOOD");
-                        apb_write = 1'b0;
-                        apb_addr = 3'h4; // STATUS.PGOOD
-                    end
-                endcase
-            end
-            // Log after NBA updates and real-port propagation, at the same instant.
+    initial begin
+        analog_fd = $fopen("analog.csv", "w");
+        $fwrite(analog_fd, "time_ns,vout,vfb,vctrl,ipass,pg_cmp,en,load_hi\n");
+        #200;
+        for (int t_ns = 0; t_ns <= END_NS; t_ns += DT_NS) begin
             sample_ns = t_ns;
-            if (t_ns <= END_NS)
-                $fstrobe(analog_fd, "%0d,%.17g,%.17g,%.17g,%.17g,%0d,%0d,%0d",
-                         sample_ns, vout, vfb, vctrl, ipass, pg_cmp, ctrl_en, load_hi);
+            $fstrobe(analog_fd, "%0d,%.17g,%.17g,%.17g,%.17g,%0d,%0d,%0d",
+                     sample_ns, vout, vfb, vctrl, ipass, pg_cmp, ctrl_en, load_hi);
+            #DT_NS;
+        end
+    end
+
+    initial begin
+        digital_fd = $fopen("digital.csv", "w");
+        $fwrite(digital_fd, "tick,time_ns,rst,en,pg_cmp,state,pgood,load_hi\n");
+        @(negedge rst);
+        record_digital(0);
+        #150;
+        for (int n = 1; n <= END_NS / CLK_NS; n++) begin
+            record_digital(n);
+            if (n < END_NS / CLK_NS) #CLK_NS;
         end
 
         $fclose(analog_fd);

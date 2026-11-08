@@ -2,6 +2,7 @@ module pg_cmp_rnm #(
     parameter real V_HI = 0.87,
     parameter real V_LO = 0.85
 ) (
+    input  real  v,
     output logic q
 );
     timeunit 1ns;
@@ -17,13 +18,6 @@ module pg_cmp_rnm #(
         end
     endfunction
 
-    task automatic rst();
-        q = 1'b0;
-    endtask
-
-    task automatic update(input real v);
-        q = next_q(q, v);
-    endtask
-
     initial q = 1'b0;
+    always @(v) q = next_q(q, v);
 endmodule
