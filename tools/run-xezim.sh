@@ -26,7 +26,7 @@ xrun() {
   shift 3
   local log="$OUT/logs/$tag.run.log"
 
-  ( cd "$OUT" && "$XEZIM_BIN" --simulate --no-cache --error-exit \
+  ( cd "$OUT" && "$XEZIM_BIN" --simulate --wave --no-cache --error-exit \
       --module-timescale 1ns/1ps --max-time 1ms -s "$top" "$@" ) > "$log" 2>&1
   local rc=$?
   [[ $rc -eq 0 ]] || {
@@ -47,4 +47,8 @@ printf '\n=== apb: RgGen CSR + SV-RNM + Veryl supervisor, analog and digital CSV
 xrun apb apb_system_tb APB_SYSTEM_PASS "${RGLIB[@]}" "${RNM[@]}" "$DUT" "$CSR" \
   "$ROOT/sim/apb_master_bfm.sv" "$ROOT/sim/apb_system_tb.sv" || exit 1
 
+# xezim writes package parameters as `pkg::NAME`, which is not a VCD
+# identifier and makes GTKWave stop; rename them to `pkg__NAME`.
+sed -i '/^\$var/s/::/__/g' "$OUT/wave.vcd"
+printf '\nWaveform: %s\n' "${OUT#"$ROOT"/}/wave.vcd"
 printf '\nSIM_PASS\n'

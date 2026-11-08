@@ -141,4 +141,10 @@ module apb_system_tb;
         $display("APB_SYSTEM_PASS");
         $finish;
     end
+
+    // Waveforms for a viewer such as GTKWave (xezim needs --wave).
+    initial begin
+        $dumpfile("wave.vcd");
+        $dumpvars(2, apb_system_tb); // TB signals plus one level into each instance
+    end
 endmodule
