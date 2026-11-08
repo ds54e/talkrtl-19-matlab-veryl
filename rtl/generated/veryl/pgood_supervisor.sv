@@ -31,19 +31,23 @@ module pgood_supervisor (
     // Priority: rst, en==0, pg_cmp==0, qualification, ON hold.
     always_ff @ (posedge clk) begin
         if (rst) begin
+            // Stateflow: WAIT/ON -> OFF [rst]
             state_q  <= State_OFF;
             pgood_q  <= 0;
             high_cnt <= CNT_CLEAR;
         end else begin
             if ((!en)) begin
+                // Stateflow: WAIT/ON -> OFF [~en]
                 state_q  <= State_OFF;
                 pgood_q  <= 0;
                 high_cnt <= CNT_CLEAR;
             end else if ((!pg_cmp)) begin
+                // Stateflow: OFF -> WAIT [en && ~rst], ON -> WAIT [~pg_cmp]
                 state_q  <= State_WAIT;
                 pgood_q  <= 0;
                 high_cnt <= CNT_CLEAR;
             end else if ((state_q == State_ON)) begin
+                // Stateflow: stay in ON
                 state_q <= State_ON;
                 pgood_q <= 1;
             end else if ((high_cnt == CNT_CLEAR)) begin
@@ -52,6 +56,7 @@ module pgood_supervisor (
                 pgood_q  <= 0;
                 high_cnt <= CNT_K0;
             end else if ((high_cnt >= PG_STABLE_CYCLES)) begin
+                // Stateflow: WAIT -> ON [duration(pg_cmp, sec) >= 1.95e-06]
                 // Assert at k0+20, the 21st consecutive High sample.
                 state_q  <= State_ON;
                 pgood_q  <= 1;
