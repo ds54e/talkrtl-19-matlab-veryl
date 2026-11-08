@@ -15,5 +15,5 @@ CSR_OUT="$WORK/rggen" bash tools/gen-csr.sh
 # Veryl preserves the target path from Veryl.toml under --out-dir.
 diff -u rtl/generated/veryl/pgood_supervisor.sv \
   "$WORK/veryl/results/generated/veryl/pgood_supervisor.sv"
-diff -u rtl/generated/rggen/ldo_csr.v "$WORK/rggen/ldo_csr.v"
+diff -u rtl/generated/rggen/ldo_csr.sv "$WORK/rggen/ldo_csr.sv"
 echo GENERATED_RTL_CHECK_PASS

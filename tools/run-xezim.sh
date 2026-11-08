@@ -7,17 +7,14 @@ OUT="$ROOT/results/generated/xezim"
 
 RNM=("$ROOT/rtl/rnm/pg_cmp_rnm.sv" "$ROOT/rtl/rnm/ldo_rnm.sv")
 DUT="$ROOT/rtl/generated/veryl/pgood_supervisor.sv"
-RGLIB_DIR="$ROOT/rtl/rggen-verilog-rtl"
-RGLIB=("$RGLIB_DIR/rggen_or_reducer.v"
-       "$RGLIB_DIR/rggen_mux.v"
-       "$RGLIB_DIR/rggen_bit_field.v"
-       "$RGLIB_DIR/rggen_address_decoder.v"
-       "$RGLIB_DIR/rggen_register_common.v"
-       "$RGLIB_DIR/rggen_default_register.v"
-       "$RGLIB_DIR/rggen_adapter_common.v"
-       "$RGLIB_DIR/rggen_apb_adapter.v"
-       "$ROOT/rtl/rggen-sv-rtl/rggen_apb_if.sv")
-CSR="$ROOT/rtl/generated/rggen/ldo_csr.v"
+RGLIB_DIR="$ROOT/rtl/rggen-sv-rtl"
+# rggen_rtl_pkg.sv must come first.
+RGLIB=()
+for f in rtl_pkg or_reducer mux bit_field_if bit_field register_if address_decoder \
+         register_common default_register bus_if adapter_common apb_if apb_adapter; do
+  RGLIB+=("$RGLIB_DIR/rggen_$f.sv")
+done
+CSR="$ROOT/rtl/generated/rggen/ldo_csr.sv"
 rm -rf "$OUT"
 mkdir -p "$OUT/logs"
 printf 'SIM: %s\n' "$("$XEZIM_BIN" -V 2>/dev/null | head -1)"
@@ -30,7 +27,7 @@ xrun() {
   local log="$OUT/logs/$tag.run.log"
 
   ( cd "$OUT" && "$XEZIM_BIN" --simulate --no-cache --error-exit \
-      --module-timescale 1ns/1ps --max-time 1ms -I "$RGLIB_DIR" -s "$top" "$@" ) > "$log" 2>&1
+      --module-timescale 1ns/1ps --max-time 1ms -s "$top" "$@" ) > "$log" 2>&1
   local rc=$?
   [[ $rc -eq 0 ]] || {
     printf 'SIM_FAIL: %s exited %s, see %s\n' "$tag" "$rc" "${log#"$ROOT"/}" >&2

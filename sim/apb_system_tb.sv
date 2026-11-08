@@ -14,6 +14,7 @@ module apb_system_tb;
     logic pg_cmp, pgood, ctrl_en, cap_pg_cmp;
     logic [1:0] state;
     int analog_fd, digital_fd, sample_ns;
+    bit status_read = 1'b0;
 
     rggen_apb_if #(3, 32) apb_if ();
     logic apb_start = 1'b0;
@@ -30,12 +31,7 @@ module apb_system_tb;
         .apb_rdata (apb_rdata), .apb_err (), .apb_done (apb_done)
     );
     ldo_csr u_csr (
-        .i_clk (clk), .i_rst_n (rst_n),
-        .i_psel (apb_if.psel), .i_penable (apb_if.penable),
-        .i_paddr (apb_if.paddr), .i_pprot (apb_if.pprot),
-        .i_pwrite (apb_if.pwrite), .i_pstrb (apb_if.pstrb),
-        .i_pwdata (apb_if.pwdata), .o_pready (apb_if.pready),
-        .o_prdata (apb_if.prdata), .o_pslverr (apb_if.pslverr),
+        .i_clk (clk), .i_rst_n (rst_n), .apb_if (apb_if.slave),
         .o_ctrl_en (ctrl_en), .i_status_pgood (pgood)
     );
     ldo_rnm u_ldo (
@@ -88,6 +84,7 @@ module apb_system_tb;
                     if (apb_rdata[0] !== pgood)
                         $fatal(1, "APB_SYSTEM_FAIL: STATUS.PGOOD does not match pgood");
                     $display("APB_SYSTEM: STATUS.PGOOD read matches pgood=%0d", pgood);
+                    status_read = 1'b1;
                 end
                 // Issue after tick 18 so APB setup + access raise CTRL.EN at tick 20.
                 apb_start = (t_ns / CLK_NS == 18 || t_ns / CLK_NS == 200);
@@ -115,6 +112,8 @@ module apb_system_tb;
 
         $fclose(analog_fd);
         $fclose(digital_fd);
+        if (!status_read)
+            $fatal(1, "APB_SYSTEM_FAIL: STATUS.PGOOD read never completed");
         $display("APB_SYSTEM: reached tick %0d (50 us)", END_NS / CLK_NS);
         $display("APB_SYSTEM_PASS");
         $finish;
