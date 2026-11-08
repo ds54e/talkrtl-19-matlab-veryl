@@ -1,5 +1,4 @@
-# Local generated models/results (source scripts remain tracked)
-/model/generated/
+# Local simulation results
 /results/generated/
 /tmp/
 /temp/

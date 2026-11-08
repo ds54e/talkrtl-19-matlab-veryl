@@ -1,31 +1,25 @@
-function info = comparison_figure(io)
-% time shift も plot 用 smoothing もしない。
-s = io.paths();
+function info = comparison_figure()
+s = demo_paths();
 if ~isfolder(s.comparison_dir), mkdir(s.comparison_dir); end
 
-a0 = io.readcsv(s.reference_analog);
-a1 = io.readcsv(fullfile(s.xezim_dir, 'rnm_nominal_full.csv'));
-d0 = io.readcsv(s.reference_digital);
-d1 = io.readcsv(fullfile(s.xezim_dir, 'system_nominal.csv'));
+a0 = readtable(s.reference_analog);
+a1 = readtable(fullfile(s.xezim_dir, 'analog.csv'));
+d0 = readtable(s.reference_digital);
+d1 = readtable(fullfile(s.xezim_dir, 'digital.csv'));
 
 t_a0 = a0.t_s * 1e6;           % us
 t_a1 = a1.time_ns / 1e3;       % us
 t_d0 = d0.time_ns / 1e3;       % us
 t_d1 = d1.time_ns / 1e3;       % us
-% reference の digital.csv は DUT 出力だけを持つ (stimulus を含まない) ので、
-% scenario は reference 側の analog.csv と implementation 側の rnm_nominal.csv から取る。
-a1n = io.readcsv(fullfile(s.xezim_dir, 'rnm_nominal.csv'));
-t_s0 = a0.t_s * 1e6;
-t_s1 = a1n.time_ns / 1e3;
 
 c0 = [0.000 0.447 0.741];      % reference
 c1 = [0.850 0.325 0.098];      % implementation
 
 f1 = figure('Visible', 'off', 'Position', [100 100 1100 840], 'Color', 'w');
 
-AX_L = 0.072;                  % 全 panel 共通の左端 / 幅 (x 軸を揃える)
+AX_L = 0.072;                  % Shared panel width and left edge
 AX_W = 0.895;
-H_VOUT = 0.345;                % vout panel は digital row の約 4 倍の高さ
+H_VOUT = 0.345;                % Give vout more height than the digital rows
 H_DIG = 0.082;
 GAP = 0.038;
 
@@ -35,7 +29,7 @@ plot(ax_v, t_a1, a1.vout, '--', 'Color', c1, 'LineWidth', 1.1);
 grid(ax_v, 'on');
 ylabel(ax_v, 'vout [V]');
 title(ax_v, 'Reference vs implementation — nominal 50 us');
-legend(ax_v, {'Reference: Simscape + Stateflow', 'Implementation: Xezim RNM + Veryl'}, ...
+legend(ax_v, {'Reference: Simscape + Stateflow', 'Implementation: Xezim SV-RNM + Veryl + RgGen'}, ...
     'Location', 'southeast');
 ylim(ax_v, [0 1.08]);
 
@@ -44,10 +38,10 @@ rows = {
                 {t_d1, d1.pg_cmp, '--', c1}
     'pgood',    {t_d0, d0.pgood, '-', [0.000 0.600 0.200]}, ...
                 {t_d1, d1.pgood, '--', [0.700 0.200 0.600]}
-    'en',       {t_s0, a0.en, '-', [0.300 0.300 0.300]}, ...
+    'en',       {t_a0, a0.en, '-', [0.300 0.300 0.300]}, ...
                 {}
-    'load\_hi', {t_s0, a0.load_hi, '-', [0.800 0.500 0.000]}, ...
-                {t_s1, a1n.load_hi, ':', [0.200 0.200 0.200]}
+    'load\_hi', {t_a0, a0.load_hi, '-', [0.800 0.500 0.000]}, ...
+                {t_a1, a1.load_hi, ':', [0.200 0.200 0.200]}
     };
 for k = 1:size(rows, 1)
     y = 0.120 + (size(rows, 1) - k) * (H_DIG + GAP);
@@ -65,7 +59,7 @@ for k = 1:size(rows, 1)
     ylabel(ax, rows{k, 1}, 'FontSize', 9);
     set(ax, 'FontSize', 9);
     if k < size(rows, 1)
-        xticklabels(ax, {});     % 時刻軸は最下段だけに出す (timing 表示らしく)
+        xticklabels(ax, {});     % Show time labels only on the bottom row
     else
         xlabel(ax, 'time [us]');
     end
