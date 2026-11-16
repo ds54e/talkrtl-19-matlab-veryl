@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Simulate RgGen CSR + SV-RNM LDO + Veryl supervisor with xezim.
-# Writes analog.csv, digital.csv and wave.fst to results/generated/xezim.
+# Writes signals.csv and wave.fst to results/generated/xezim.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/results/generated/xezim"

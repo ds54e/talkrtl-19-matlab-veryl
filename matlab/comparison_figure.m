@@ -3,14 +3,12 @@ s = demo_paths();
 if ~isfolder(s.comparison_dir), mkdir(s.comparison_dir); end
 
 a0 = readtable(s.reference_analog);
-a1 = readtable(fullfile(s.xezim_dir, 'analog.csv'));
+a1 = readtable(fullfile(s.xezim_dir, 'signals.csv'));
 d0 = readtable(s.reference_digital);
-d1 = readtable(fullfile(s.xezim_dir, 'digital.csv'));
 
 t_a0 = a0.t_s * 1e6;           % us
 t_a1 = a1.time_ns / 1e3;       % us
 t_d0 = d0.time_ns / 1e3;       % us
-t_d1 = d1.time_ns / 1e3;       % us
 
 c0 = [0.000 0.447 0.741];      % reference
 c1 = [0.850 0.325 0.098];      % implementation
@@ -35,9 +33,9 @@ ylim(ax_v, [0 1.08]);
 
 rows = {
     'pg\_cmp',  {t_d0, d0.pg_cmp, '-', c0}, ...
-                {t_d1, d1.pg_cmp, '--', c1}
+                {t_a1, a1.pg_cmp, '--', c1}
     'pgood',    {t_d0, d0.pgood, '-', [0.000 0.600 0.200]}, ...
-                {t_d1, d1.pgood, '--', [0.700 0.200 0.600]}
+                {t_a1, a1.pgood, '--', [0.700 0.200 0.600]}
     'en',       {t_a0, a0.en, '-', [0.300 0.300 0.300]}, ...
                 {}
     'load\_hi', {t_a0, a0.load_hi, '-', [0.800 0.500 0.000]}, ...
