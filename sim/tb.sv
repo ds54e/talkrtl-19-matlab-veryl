@@ -1,4 +1,4 @@
-module apb_system_tb;
+module tb;
     timeunit 1ns; timeprecision 1ps;
 
     localparam int T0 = 200;        // scenario time zero, after reset
@@ -77,12 +77,12 @@ module apb_system_tb;
 
         mid_tick(200);
         if (ctrl_en !== 1'b1 || vout < 0.87 || pgood !== 1'b1)
-            $fatal(1, "APB_SYSTEM_FAIL: CTRL.EN write did not enable the LDO");
-        $display("APB_SYSTEM: CTRL.EN write enabled the LDO and PGOOD");
+            $fatal(1, "TB_FAIL: CTRL.EN write did not enable the LDO");
+        $display("TB: CTRL.EN write enabled the LDO and PGOOD");
         apb_access(1'b0, STATUS, '0, rdata);
         if (rdata[0] !== pgood)
-            $fatal(1, "APB_SYSTEM_FAIL: STATUS.PGOOD does not match pgood");
-        $display("APB_SYSTEM: STATUS.PGOOD read matches pgood=%0d", pgood);
+            $fatal(1, "TB_FAIL: STATUS.PGOOD does not match pgood");
+        $display("TB: STATUS.PGOOD read matches pgood=%0d", pgood);
         status_read = 1'b1;
     end
 
@@ -103,9 +103,9 @@ module apb_system_tb;
         end
         $fclose(fd);
         if (!status_read)
-            $fatal(1, "APB_SYSTEM_FAIL: STATUS.PGOOD read never completed");
-        $display("APB_SYSTEM: reached %0d us", END_NS / 1000);
-        $display("APB_SYSTEM_PASS");
+            $fatal(1, "TB_FAIL: STATUS.PGOOD read never completed");
+        $display("TB: reached %0d us", END_NS / 1000);
+        $display("TB_PASS");
         $finish;
     end
 endmodule
