@@ -1,32 +1,7 @@
-# Local simulation results
+# Demo outputs and tool caches
 /results/generated/
-/tmp/
-/temp/
+/.build/
+/talkrtl_ldo.f
 slprj/
-codegen/
 *.slxc
 *.asv
-*.autosave
-*.m~
-*.mex*
-*.sldd.bak
-# HDL build/waves
-*.vcd
-*.fst
-*.wlf
-transcript
-target/
-build/
-.veryl/
-# Veryl may also write this cache dir and a root file list; the file list
-# holds checkout-dependent absolute paths, so it is regenerated, not committed.
-.build/
-/*.f
-# Local agent/auth/editor data
-.env
-.env.*
-!.env.example
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
