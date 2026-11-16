@@ -10,11 +10,10 @@ module tb;
     logic rst = 1'b0;
     wire rst_n = ~rst;
     logic load_hi = 1'b0;
-    real vout, vfb, vctrl, ipass;
     logic pg_cmp, pgood, ctrl_en;
     logic [1:0] state;
     import udn_pkg::enet;
-    enet vin;
+    enet vin, vout, sw;
     int fd;
     bit status_read = 1'b0;
 
@@ -25,17 +24,21 @@ module tb;
         .i_clk (clk), .i_rst_n (rst_n), .apb_if (apb_if.slave),
         .o_ctrl_en (ctrl_en), .i_status_pgood (pgood)
     );
-    vsrc #(.V(1.2)) supply (.p(vin));
-    ldo u_ldo (
-        .vin (vin), .en (ctrl_en), .load_hi (load_hi), .vout (vout), .vfb (vfb),
-        .vctrl (vctrl), .ipass (ipass), .pg_cmp (pg_cmp)
-    );
+    ldo u_ldo (.vin (vin), .vout (vout), .en (ctrl_en), .pg_cmp (pg_cmp));
     // The supervisor samples CTRL.EN one clock later; the reference mirrors
     // this with its en_reg Unit Delay.
     pgood_supervisor u_sup (
         .clk (clk), .rst (rst), .en (ctrl_en), .pg_cmp (pg_cmp),
         .pgood (pgood), .state (state)
     );
+
+    // Board: the 1.2 V supply, Cout and the load. While load_hi, Rheavy is in
+    // parallel with Rload: 1.8 k || 360 = 300 ohm.
+    vsrc  #(.V(1.2))                      supply (.p(vin));
+    cap_g #(.C(10.0e-9))                  cout   (.p(vout));
+    res_g #(.R(1.8e3))                    rload  (.p(vout));
+    res   #(.R(360.0))                    rheavy (.p(vout), .n(sw));
+    sw_g  #(.RON(1.0e-6), .GOFF(1.0e-12)) swh    (.on(load_hi), .p(sw));
 
     // Rising edges at every multiple of CLK_NS.
     always #(CLK_NS / 2) clk <= ~clk;
@@ -76,7 +79,7 @@ module tb;
         apb_access(1'b1, CTRL, 32'h1, rdata);
 
         mid_tick(200);
-        if (ctrl_en !== 1'b1 || vout < 0.87 || pgood !== 1'b1)
+        if (ctrl_en !== 1'b1 || vout.V < 0.87 || pgood !== 1'b1)
             $fatal(1, "TB_FAIL: CTRL.EN write did not enable the LDO");
         $display("TB: CTRL.EN write enabled the LDO and PGOOD");
         apb_access(1'b0, STATUS, '0, rdata);
@@ -91,14 +94,15 @@ module tb;
         #10000 load_hi <= 1'b0;
     end
 
-    // Every signal every 10 ns, written at the end of the time slot.
+    // Every signal every 10 ns, written at the end of the time slot; vfb,
+    // vctrl and ipass are inside the chip.
     initial begin
         fd = $fopen("signals.csv", "w");
         $fwrite(fd, "time_ns,vout,vfb,vctrl,ipass,pg_cmp,en,load_hi,rst,state,pgood\n");
         #T0;
         repeat (END_NS / DT_NS + 1) begin
             $fstrobe(fd, "%0d,%.17g,%.17g,%.17g,%.17g,%0d,%0d,%0d,%0d,%0d,%0d", $time - T0,
-                     vout, vfb, vctrl, ipass, pg_cmp, ctrl_en, load_hi, rst, state, pgood);
+                     vout.V, u_ldo.vfb, u_ldo.vctrl, u_ldo.ipass, pg_cmp, ctrl_en, load_hi, rst, state, pgood);
             #DT_NS;
         end
         $fclose(fd);

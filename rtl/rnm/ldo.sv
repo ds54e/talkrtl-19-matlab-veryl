@@ -1,32 +1,20 @@
-// SV-RNM LDO on UDN nets: the same blocks as the Simscape "Analog LDO"
-// subsystem, with the values from CONTRACT.md. The supply vin is a pin; the
-// testbench drives it with 1.2 V (Simscape keeps that source inside).
+// SV-RNM LDO chip on UDN nets, with the values from CONTRACT.md: the pass
+// between the vin and vout pins, the error amplifier, the feedback divider and
+// the PGOOD comparator. Cout and the load are on the board (the testbench).
 module ldo import udn_pkg::*; (
     inout  enet  vin,
+    inout  enet  vout,
     input  logic en,
-    input  logic load_hi,
-    output real  vout,
-    output real  vfb,
-    output real  vctrl,
-    output real  ipass,
     output logic pg_cmp
 );
     timeunit 1ns; timeprecision 1ps;
 
-    enet out;
+    real vfb, vctrl, ipass;
 
-    // Power path
-    ldo_pass pass (.en(en), .vctrl(vctrl), .in(vin), .out(out), .ipass(ipass));
-    cap_g #(.C(10.0e-9)) cout (.p(out));
-    ldo_load load (.load_hi(load_hi), .out(out));
-
-    // Feedback
-    ldo_rdiv rdiv (.out(out), .vfb(vfb));
+    ldo_pass pass (.en(en), .vctrl(vctrl), .in(vin), .out(vout), .ipass(ipass));
+    ldo_rdiv rdiv (.out(vout), .vfb(vfb));
     ldo_erramp ea (.en(en), .vfb(vfb), .vctrl(vctrl));
-
-    // Outputs
-    assign vout = out.V;
-    pg_cmp cmp (.v(vout), .q(pg_cmp));
+    pg_cmp cmp (.v(vout.V), .q(pg_cmp));
 endmodule
 
 // Pass: the Simulink gain, saturation and en gate driving a current source.
@@ -40,18 +28,6 @@ module ldo_pass import udn_pkg::*; (
     timeunit 1ns; timeprecision 1ps;
     assign ipass = en ? clip(4.0e-3 * vctrl, 0.0, 5.0e-3) : 0.0;
     isrc src (.amps(ipass), .p(in), .n(out));
-endmodule
-
-// While load_hi, Rheavy is in parallel with Rload: 1.8 k || 360 = 300 ohm.
-module ldo_load import udn_pkg::*; (
-    input  logic load_hi,
-    inout  enet  out
-);
-    timeunit 1ns; timeprecision 1ps;
-    enet sw;
-    res_g #(.R(1.8e3))                    rload  (.p(out));
-    res   #(.R(360.0))                    rheavy (.p(out), .n(sw));
-    sw_g  #(.RON(1.0e-6), .GOFF(1.0e-12)) swh    (.on(load_hi), .p(sw));
 endmodule
 
 module ldo_rdiv import udn_pkg::*; (

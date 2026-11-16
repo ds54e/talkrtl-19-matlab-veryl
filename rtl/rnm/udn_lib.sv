@@ -54,7 +54,7 @@ module res #(parameter real R)(inout enet p, inout enet n);
     // net's totals minus our own driver) in series with R, settling within the
     // time slot. Plain real scalars here: xezim runs this much faster than
     // struct-valued functions. The subtraction loses precision next to an
-    // ideal source (R = 1e-9); no resistor in this LDO touches that node.
+    // ideal source (R = 1e-9); no resistor in this demo touches that node.
     real vp = 0.0, rp = OPEN, vn = 0.0, rn = OPEN;  // our drivers on p and n
     assign p = '{vp, 0.0, rp};
     assign n = '{vn, 0.0, rn};
