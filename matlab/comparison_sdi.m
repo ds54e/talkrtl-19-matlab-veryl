@@ -4,6 +4,8 @@ s = demo_paths();
 REFERENCE_RUN_NAME = 'Reference: Simscape + Stateflow';
 IMPLEMENTATION_RUN_NAME = 'Implementation: Xezim SV-RNM + Veryl + RgGen';
 MAIN = {'vout', 'pg_cmp', 'pgood', 'state'};
+% README figure rows and their heights in pixels.
+FIGURE = {'vout', 420; 'pg_cmp', 110; 'pgood', 110; 'en', 110; 'load_hi', 110};
 
 ref_run = Simulink.sdi.getRun(reference_id);
 ref_run.Name = REFERENCE_RUN_NAME;
@@ -31,9 +33,25 @@ if isfile(s.comparison_session), delete(s.comparison_session); end
 % Preserve computed Compare results and both runs, not just Inspect plots.
 saveResult(diff, s.comparison_session);
 
+% One SDI snapshot per row, stacked, so the digital rows can stay thin.
+img = [];
+for k = 1:size(FIGURE, 1)
+    snap = Simulink.sdi.CustomSnapshot;
+    snap.Width = 1100;
+    snap.Height = FIGURE{k, 2};
+    snap.plotOnSubPlot(1, 1, ref_run.getSignalsByName(FIGURE{k, 1}), true);
+    snap.plotOnSubPlot(1, 1, impl_run.getSignalsByName(FIGURE{k, 1}), true);
+    f = [tempname '.png'];
+    Simulink.sdi.snapshot('from', 'custom', 'to', 'file', 'filename', f, 'settings', snap);
+    img = [img; imread(f)]; %#ok<AGROW>
+    delete(f);
+end
+if ~isfolder(s.comparison_dir), mkdir(s.comparison_dir); end
+imwrite(img, s.figure);
+
 info = struct('path', s.comparison_session, 'saved', true, ...
     'bytes', dir(s.comparison_session).bytes, 'verdict', comparison.verdict, ...
-    'comparison', comparison);
+    'comparison', comparison, 'figure', s.figure);
 end
 
 function t = mkts(name, time_s, data)
