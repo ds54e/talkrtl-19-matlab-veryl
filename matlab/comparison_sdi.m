@@ -4,8 +4,8 @@ s = demo_paths();
 REFERENCE_RUN_NAME = 'Reference: Simscape + Stateflow';
 IMPLEMENTATION_RUN_NAME = 'Implementation: Xezim SV-RNM + Veryl + RgGen';
 MAIN = {'vout', 'pg_cmp', 'pgood', 'state'};
-% README figure rows and their heights in pixels.
-FIGURE = {'vout', 420; 'pg_cmp', 110; 'pgood', 110; 'en', 110; 'load_hi', 110};
+% README figure rows and their heights in pixels (the bottom row also holds the time labels).
+FIGURE = {'vout', 420; 'pg_cmp', 110; 'pgood', 110; 'en', 110; 'load_hi', 124};
 
 ref_run = Simulink.sdi.getRun(reference_id);
 ref_run.Name = REFERENCE_RUN_NAME;
@@ -34,8 +34,13 @@ if isfile(s.comparison_session), delete(s.comparison_session); end
 saveResult(diff, s.comparison_session);
 
 % One SDI snapshot per row, stacked, so the digital rows can stay thin.
+% Only the bottom row gets time labels; the user's SDI setting is restored.
+labels = Simulink.sdi.getTickLabelsDisplay();
+restore = onCleanup(@() Simulink.sdi.setTickLabelsDisplay(labels));
+Simulink.sdi.setTickLabelsDisplay('y-axis');
 img = [];
 for k = 1:size(FIGURE, 1)
+    if k == size(FIGURE, 1), Simulink.sdi.setTickLabelsDisplay(labels); end
     snap = Simulink.sdi.CustomSnapshot;
     snap.Width = 1100;
     snap.Height = FIGURE{k, 2};
