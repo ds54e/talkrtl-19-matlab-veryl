@@ -1,9 +1,9 @@
-// Adapted from xezim-fixes/rnm/models/rnm.sv (Thevenin triples / Millman).
+// Circuit nodes are {V, I, R} nets resolved with Millman's theorem.
 package udn_pkg;
     timeunit 1ns;
     timeprecision 1ps;
     parameter real STEP_NS = 0.2;
-    parameter real H = STEP_NS * 1.0e-9; // Physical seconds, not scaled time.
+    parameter real H = STEP_NS * 1.0e-9;
     parameter real OPEN = 1.0e30;
     typedef struct { real V; real I; real R; } electrical;
 
@@ -121,8 +121,8 @@ module vsense(input enet p, output real volts);
     end
 endmodule
 
-// Error Amp. Not a circuit element: like the Simulink blocks, a saturating gain
-// followed by a first-order lag, stepped with the same snapshot/commit timing.
+// Not a circuit element: like the Simulink blocks, a saturating gain followed
+// by a first-order lag, stepped with the same snapshot/commit timing.
 module erramp #(parameter real A0 = 200.0, VREF = 0.45, TAU = 0.5e-6, VMAX = 1.0)
     (input logic en, input real vfb, output real vctrl);
     timeunit 1ns; timeprecision 1ps;
