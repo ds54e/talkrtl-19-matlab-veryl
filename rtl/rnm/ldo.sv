@@ -16,25 +16,32 @@ module ldo import udn_pkg::*; (
 
     vsrc #(.V(1.2)) vin (.p(in));
 
-    erramp #(.A0(200.0), .VREF(0.45), .TAU(0.5e-6), .VMAX(1.0)) ea (
-        .en   (en),
-        .vfb  (vfb),
-        .vctrl(vctrl)
-    );
-
-    isrc #(.GM(4.0e-3), .IMAX(5.0e-3)) pass (
-        .en     (en),
-        .control(vctrl),
-        .p      (in),
-        .n      (out),
-        .amps   (ipass)
-    );
-
+    ldo_erramp ea (.en(en), .vfb(vfb), .vctrl(vctrl));
+    ldo_pass pass (.en(en), .vctrl(vctrl), .in(in), .out(out), .ipass(ipass));
     ldo_rdiv rdiv (.out(out), .vfb(vfb));
     cap_g #(.C(10.0e-9)) cout (.p(out));
     ldo_load load (.load_hi(load_hi), .out(out));
     assign vout = out.V;
     pg_cmp cmp (.v(vout), .q(pg_cmp));
+endmodule
+
+// Error Amp: like the Simulink blocks, a saturating gain followed by a
+// first-order lag, not a circuit element.
+module ldo_erramp import udn_pkg::*; (input logic en, input real vfb, output real vctrl);
+    timeunit 1ns; timeprecision 1ps;
+    localparam real A0 = 200.0, VREF = 0.45, TAU = 0.5e-6, VMAX = 1.0;
+    real vc = 0.0;
+    assign vctrl = vc;
+    always #STEP_NS vc <= vc + H / TAU * (clip(A0 * (en ? 1.0 : 0.0) * (VREF - vfb), 0.0, VMAX) - vc);
+endmodule
+
+// Pass: the Simulink gain, saturation and en gate driving a current source
+// from the 1.2 V input to the output.
+module ldo_pass import udn_pkg::*;
+    (input logic en, input real vctrl, inout enet in, inout enet out, output real ipass);
+    timeunit 1ns; timeprecision 1ps;
+    assign ipass = en ? clip(4.0e-3 * vctrl, 0.0, 5.0e-3) : 0.0;
+    isrc src (.amps(ipass), .p(in), .n(out));
 endmodule
 
 module ldo_rdiv import udn_pkg::*; (inout enet out, output real vfb);

@@ -32,9 +32,10 @@ package udn_pkg;
 endpackage
 
 // All grounded elements use the implicit electrical reference (0 V).
-// Only the dynamic elements (capacitor, error amplifier) step in time: every
-// STEP_NS they update their state with nonblocking assignments, so none sees
-// another's new state within the step. Everything else is continuous.
+// Only elements with state step in time (here the capacitor; ldo.sv's error
+// amplifier does the same): every STEP_NS they update with nonblocking
+// assignments, so none sees another's new state within the step. Everything
+// else is continuous.
 import udn_pkg::*;
 
 module vsrc #(parameter real V = 1.2)(inout enet p);
@@ -100,21 +101,9 @@ module sw_g #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
     assign p = '{0.0, 0.0, on ? RON : 1.0 / GOFF};
 endmodule
 
-module isrc #(parameter real GM = 4.0e-3, IMAX = 5.0e-3)
-    (input logic en, input real control, inout enet p, inout enet n,
-     output real amps);
+// Ideal current source: amps flows out of p and into n.
+module isrc(input real amps, inout enet p, inout enet n);
     timeunit 1ns; timeprecision 1ps;
-    assign amps = en ? clip(GM * control, 0.0, IMAX) : 0.0;
     assign p = '{0.0, -amps, OPEN};
     assign n = '{0.0,  amps, OPEN};
-endmodule
-
-// Not a circuit element: like the Simulink blocks, a saturating gain followed
-// by a first-order lag.
-module erramp #(parameter real A0 = 200.0, VREF = 0.45, TAU = 0.5e-6, VMAX = 1.0)
-    (input logic en, input real vfb, output real vctrl);
-    timeunit 1ns; timeprecision 1ps;
-    real vc = 0.0;
-    assign vctrl = vc;
-    always #STEP_NS vc <= vc + H / TAU * (clip(A0 * (en ? 1.0 : 0.0) * (VREF - vfb), 0.0, VMAX) - vc);
 endmodule
