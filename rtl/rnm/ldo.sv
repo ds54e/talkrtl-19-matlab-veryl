@@ -1,6 +1,6 @@
 // SV-RNM LDO on UDN nets: the same blocks as the Simscape "Analog LDO"
 // subsystem, with the values from CONTRACT.md.
-module ldo_rnm import udn_pkg::*; (
+module ldo import udn_pkg::*; (
     input  logic en,
     input  logic load_hi,
     output real  vout,
@@ -44,7 +44,7 @@ module ldo_rnm import udn_pkg::*; (
 
     // Voltage Sensor for vout, and the PGOOD comparator
     vsense s_out (.p(out), .volts(vout));
-    pg_cmp_rnm cmp (.v(vout), .q(pg_cmp));
+    pg_cmp cmp (.v(vout), .q(pg_cmp));
 endmodule
 
 // Rdiv: the feedback divider (vfb = vout / 2) and its voltage sensor.

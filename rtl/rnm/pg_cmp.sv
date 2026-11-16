@@ -1,4 +1,4 @@
-module pg_cmp_rnm #(
+module pg_cmp #(
     parameter real V_HI = 0.87,
     parameter real V_LO = 0.85
 ) (
