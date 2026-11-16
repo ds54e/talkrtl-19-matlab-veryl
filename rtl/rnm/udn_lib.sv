@@ -2,7 +2,7 @@
 package udn_pkg;
     timeunit 1ns;
     timeprecision 1ps;
-    parameter real STEP_NS = 0.2;
+    parameter real STEP_NS = 1.25;
     parameter real H = STEP_NS * 1.0e-9;
     parameter real OPEN = 1.0e30;
     typedef struct { real V; real I; real R; } electrical;
@@ -51,16 +51,40 @@ endmodule
 
 module res #(parameter real R = 1000.0)(inout enet p, inout enet n);
     timeunit 1ns; timeprecision 1ps;
-    real vp = 0.0, vn = 0.0, sp, sn;
-    // Each end sees the other end's voltage from the previous step.
-    assign p = '{vn, 0.0, R};
-    assign n = '{vp, 0.0, R};
-    initial forever begin
-        #0.001;
-        sp = p.V; sn = n.V;
-        #0.001;
-        vp = sp; vn = sn;
-        #(STEP_NS - 0.002);
+    // Each end is driven by the other end's external Thevenin source (that
+    // net's totals minus our own driver) in series with R, settling within the
+    // time slot. Plain real scalars here: xezim runs this much faster than
+    // struct-valued functions. The subtraction loses precision next to an
+    // ideal source (R = 1e-9); no resistor in this LDO touches that node.
+    real vp = 0.0, rp = OPEN, vn = 0.0, rn = OPEN;  // our drivers on p and n
+    assign p = '{vp, 0.0, rp};
+    assign n = '{vn, 0.0, rn};
+
+    always_comb begin
+        real gp, sp, gn, sn, vp1, rp1, vn1, rn1, dv, dg;
+        // External views from the current drivers, both before either update.
+        gn = n.R < OPEN ? 1.0 / n.R : 0.0;
+        sn = n.I;
+        if (rn < OPEN) begin gn -= 1.0 / rn; sn -= vn / rn; end
+        gp = p.R < OPEN ? 1.0 / p.R : 0.0;
+        sp = p.I;
+        if (rp < OPEN) begin gp -= 1.0 / rp; sp -= vp / rp; end
+        vp1 = gn > 0.0 ? sn / gn : 0.0;  rp1 = gn > 0.0 ? R + 1.0 / gn : OPEN;
+        vn1 = gp > 0.0 ? sp / gp : 0.0;  rn1 = gp > 0.0 ? R + 1.0 / gp : OPEN;
+        // Update only on a real change (about 1e-12 relative, on the Norton
+        // current and conductance), so roundoff cannot bounce between the ends.
+        dv = vp1 / rp1 - vp / rp;  dg = 1.0 / rp1 - 1.0 / rp;
+        if (dv * dv > 1.0e-24 * (1.0e-6 + (vp1 / rp1) * (vp1 / rp1) + (vp / rp) * (vp / rp)) ||
+            dg * dg > 1.0e-24 * (1.0e-6 + 1.0 / (rp1 * rp1) + 1.0 / (rp * rp))) begin
+            vp = vp1;
+            rp = rp1;
+        end
+        dv = vn1 / rn1 - vn / rn;  dg = 1.0 / rn1 - 1.0 / rn;
+        if (dv * dv > 1.0e-24 * (1.0e-6 + (vn1 / rn1) * (vn1 / rn1) + (vn / rn) * (vn / rn)) ||
+            dg * dg > 1.0e-24 * (1.0e-6 + 1.0 / (rn1 * rn1) + 1.0 / (rn * rn))) begin
+            vn = vn1;
+            rn = rn1;
+        end
     end
 endmodule
 
