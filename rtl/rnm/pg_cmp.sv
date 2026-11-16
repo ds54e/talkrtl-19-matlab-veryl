@@ -1,12 +1,9 @@
-module pg_cmp #(
-    parameter real V_HI = 0.87,
-    parameter real V_LO = 0.85
-) (
+module pg_cmp (
     input  real  v,
     output logic q
 );
-    timeunit 1ns;
-    timeprecision 1ps;
+    timeunit 1ns; timeprecision 1ps;
+    localparam real V_HI = 0.87, V_LO = 0.85;
 
     // Hysteresis: rise above V_HI, fall below V_LO, otherwise hold (also at equality).
     initial q = 1'b0;

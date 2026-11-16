@@ -1,8 +1,8 @@
 module apb_system_tb;
-    timeunit 1ns;
-    timeprecision 1ps;
+    timeunit 1ns; timeprecision 1ps;
 
-    localparam int DT_NS = 10;
+    localparam int T0 = 200;        // scenario time zero, after reset
+    localparam int DT_NS = 10;      // CSV sample interval
     localparam int CLK_NS = 100;
     localparam int END_NS = 50000;
 
@@ -13,6 +13,8 @@ module apb_system_tb;
     real vout, vfb, vctrl, ipass;
     logic pg_cmp, pgood, ctrl_en;
     logic [1:0] state;
+    import udn_pkg::enet;
+    enet vin;
     int fd;
     bit status_read = 1'b0;
 
@@ -23,8 +25,6 @@ module apb_system_tb;
         .i_clk (clk), .i_rst_n (rst_n), .apb_if (apb_if.slave),
         .o_ctrl_en (ctrl_en), .i_status_pgood (pgood)
     );
-    import udn_pkg::enet;
-    enet vin;
     vsrc #(.V(1.2)) supply (.p(vin));
     ldo u_ldo (
         .vin (vin), .en (ctrl_en), .load_hi (load_hi), .vout (vout), .vfb (vfb),
@@ -37,12 +37,12 @@ module apb_system_tb;
         .pgood (pgood), .state (state)
     );
 
-    // Rising edges every 100 ns; scenario time zero is at 200 ns.
-    always #50 clk <= ~clk;
+    // Rising edges at every multiple of CLK_NS.
+    always #(CLK_NS / 2) clk <= ~clk;
 
-    // Wait for the middle of clock period n (scenario time zero is at 200 ns).
+    // Wait for the middle of clock period n of the scenario.
     task automatic mid_tick(input int n);
-        #(250 + 100 * n - $time);
+        #(T0 + CLK_NS * n + CLK_NS / 2 - $time);
     endtask
 
     // One APB transfer: setup phase, then access phase until PREADY.
@@ -87,8 +87,7 @@ module apb_system_tb;
     end
 
     initial begin
-        #200;
-        #25000 load_hi <= 1'b1;
+        #(T0 + 25000) load_hi <= 1'b1;
         #10000 load_hi <= 1'b0;
     end
 
@@ -96,9 +95,9 @@ module apb_system_tb;
     initial begin
         fd = $fopen("signals.csv", "w");
         $fwrite(fd, "time_ns,vout,vfb,vctrl,ipass,pg_cmp,en,load_hi,rst,state,pgood\n");
-        #200;
+        #T0;
         repeat (END_NS / DT_NS + 1) begin
-            $fstrobe(fd, "%0d,%.17g,%.17g,%.17g,%.17g,%0d,%0d,%0d,%0d,%0d,%0d", $time - 200,
+            $fstrobe(fd, "%0d,%.17g,%.17g,%.17g,%.17g,%0d,%0d,%0d,%0d,%0d,%0d", $time - T0,
                      vout, vfb, vctrl, ipass, pg_cmp, ctrl_en, load_hi, rst, state, pgood);
             #DT_NS;
         end
