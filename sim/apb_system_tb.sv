@@ -23,8 +23,11 @@ module apb_system_tb;
         .i_clk (clk), .i_rst_n (rst_n), .apb_if (apb_if.slave),
         .o_ctrl_en (ctrl_en), .i_status_pgood (pgood)
     );
+    import udn_pkg::enet;
+    enet vin;
+    vsrc #(.V(1.2)) supply (.p(vin));
     ldo u_ldo (
-        .en (ctrl_en), .load_hi (load_hi), .vout (vout), .vfb (vfb),
+        .vin (vin), .en (ctrl_en), .load_hi (load_hi), .vout (vout), .vfb (vfb),
         .vctrl (vctrl), .ipass (ipass), .pg_cmp (pg_cmp)
     );
     // The supervisor samples CTRL.EN one clock later; the reference mirrors
