@@ -8,16 +8,10 @@ module pg_cmp_rnm #(
     timeunit 1ns;
     timeprecision 1ps;
 
-    function automatic logic next_q(input logic q_cur, input real v);
-        if (!q_cur && v > V_HI) begin
-            return 1'b1;
-        end else if (q_cur && v < V_LO) begin
-            return 1'b0;
-        end else begin
-            return q_cur;
-        end
-    endfunction
-
+    // Hysteresis: rise above V_HI, fall below V_LO, otherwise hold (also at equality).
     initial q = 1'b0;
-    always @(v) q = next_q(q, v);
+    always @(v) begin
+        if (!q && v > V_HI) q = 1'b1;
+        else if (q && v < V_LO) q = 1'b0;
+    end
 endmodule
