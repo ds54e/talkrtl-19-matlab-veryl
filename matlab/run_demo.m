@@ -83,6 +83,7 @@ n = size(ROWS, 1);
 Simulink.sdi.clearAllSubPlots();
 Simulink.sdi.setSubPlotLayout(n, 1);
 for k = 1:n
+    Simulink.sdi.setVisualization(k, 1, 'timeplot');   % SDI remembers this per row
     for sig = [ref.getSignalsByName(ROWS{k, 1}), impl.getSignalsByName(ROWS{k, 1})]
         sig.plotOnSubPlot(k, 1, true);
     end
