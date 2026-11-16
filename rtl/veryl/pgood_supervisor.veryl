@@ -13,58 +13,38 @@ module pgood_supervisor (
         ON = 2'd2,
     }
 
-    // Assert 20 clock intervals after k0, i.e. on the 21st consecutive High sample.
+    // ON on the 21st consecutive High sample of pg_cmp, 2 us after the first.
     const PG_STABLE_CYCLES: logic<5> = 5'd20;
 
-    // high_cnt: 0 = no High yet, 1 at k0, n+1 at k0+n.
-    const CNT_CLEAR: logic<5> = 5'd0;
-    const CNT_STEP : logic<5> = 5'd1;
-    const CNT_K0   : logic<5> = 5'd1;
-
     var state_q : State   ;
-    var pgood_q : logic   ;
-    var high_cnt: logic<5>;
+    var high_cnt: logic<5>; // High samples seen so far in WAIT
 
-    assign pgood = pgood_q;
     assign state = state_q;
+    assign pgood = state_q == State::ON;
 
-    // Priority: rst, en==0, pg_cmp==0, qualification, ON hold.
+    // Priority: rst, en==0, pg_cmp==0, then counting in WAIT; ON holds otherwise.
     always_ff (clk, rst) {
         if_reset {
             // Stateflow: WAIT/ON -> OFF [rst]
             state_q  = State::OFF;
-            pgood_q  = 0;
-            high_cnt = CNT_CLEAR;
+            high_cnt = 0;
         } else {
             if (!en) {
                 // Stateflow: WAIT/ON -> OFF [~en]
                 state_q  = State::OFF;
-                pgood_q  = 0;
-                high_cnt = CNT_CLEAR;
+                high_cnt = 0;
             } else if (!pg_cmp) {
                 // Stateflow: OFF -> WAIT [en && ~rst], ON -> WAIT [~pg_cmp]
                 state_q  = State::WAIT;
-                pgood_q  = 0;
-                high_cnt = CNT_CLEAR;
-            } else if (state_q == State::ON) {
-                // Stateflow: stay in ON
-                state_q = State::ON;
-                pgood_q = 1;
-            } else if (high_cnt == CNT_CLEAR) {
-                // First High sample is k0: high_cnt = 1.
-                state_q  = State::WAIT;
-                pgood_q  = 0;
-                high_cnt = CNT_K0;
-            } else if (high_cnt >= PG_STABLE_CYCLES) {
-                // Stateflow: WAIT -> ON [duration(pg_cmp, sec) >= 1.95e-06]
-                // Assert at k0+20, the 21st consecutive High sample.
-                state_q  = State::ON;
-                pgood_q  = 1;
-                high_cnt = high_cnt + CNT_STEP;
-            } else {
-                state_q  = State::WAIT;
-                pgood_q  = 0;
-                high_cnt = high_cnt + CNT_STEP;
+                high_cnt = 0;
+            } else if (state_q != State::ON) {
+                if (high_cnt >= PG_STABLE_CYCLES) {
+                    // Stateflow: WAIT -> ON [duration(pg_cmp, sec) >= 1.95e-06]
+                    state_q = State::ON;
+                } else {
+                    state_q  = State::WAIT;
+                    high_cnt = high_cnt + 1;
+                }
             }
         }
     }
