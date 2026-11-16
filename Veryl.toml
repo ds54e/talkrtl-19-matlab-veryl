@@ -4,7 +4,8 @@ version = "0.1.0"
 
 [build]
 sources = ["rtl/veryl"]
-target = {type = "directory", path = "results/generated/veryl"}
+target = {type = "directory", path = "rtl/generated/veryl"}
+sourcemap_target = {type = "none"}
 clock_type = "posedge"
 reset_type = "sync_high"
 omit_project_prefix = true
