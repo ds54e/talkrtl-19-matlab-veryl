@@ -105,6 +105,8 @@ endmodule
 module sw_g #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
     (input logic on, inout enet p);
     timeunit 1ns; timeprecision 1ps;
+    // Switch in step with the capacitor's commit. Switching at once would apply
+    // the new load to the step already being solved, one step before Simscape.
     real r = 1.0 / GOFF, next_r;
     assign p = '{0.0, 0.0, r};
     initial forever begin
@@ -120,17 +122,9 @@ module isrc #(parameter real GM = 4.0e-3, IMAX = 5.0e-3)
     (input logic en, input real control, inout enet p, inout enet n,
      output real amps);
     timeunit 1ns; timeprecision 1ps;
-    bit enabled = 0, next_enabled;
-    assign amps = enabled ? clip(GM * control, 0.0, IMAX) : 0.0;
+    assign amps = en ? clip(GM * control, 0.0, IMAX) : 0.0;
     assign p = '{0.0, -amps, OPEN};
     assign n = '{0.0,  amps, OPEN};
-    initial forever begin
-        #0.001;
-        next_enabled = en;
-        #0.001;
-        enabled = next_enabled;
-        #(STEP_NS - 0.002);
-    end
 endmodule
 
 module vsense(input enet p, output real volts);
