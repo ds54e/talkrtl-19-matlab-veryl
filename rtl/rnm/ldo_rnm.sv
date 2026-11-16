@@ -14,16 +14,37 @@ module ldo_rnm import udn_pkg::*; (
 
     enet in, out;
 
-    vsrc   #(.V(1.2))                    vin   (.p(in));                             // Vin
-    erramp #(.A0(200.0), .VREF(0.45), .TAU(0.5e-6), .VMAX(1.0))
-                                         ea    (.en(en), .vfb(vfb), .vctrl(vctrl));  // Error Amp
-    isrc   #(.GM(4.0e-3), .IMAX(5.0e-3)) pass  (.en(en), .control(vctrl), .p(in), .n(out),
-                                                .amps(ipass));                       // Pass
-    ldo_rdiv                             rdiv  (.out(out), .vfb(vfb));               // Rdiv
-    cap_g  #(.C(10.0e-9))                cout  (.p(out));                            // Cout
-    ldo_load                             load  (.load_hi(load_hi), .out(out));       // Load
-    vsense                               s_out (.p(out), .volts(vout));              // Vsense_vout
-    pg_cmp_rnm                           cmp   (.v(vout), .q(pg_cmp));               // pg_cmp
+    // Vin: DC Voltage Source
+    vsrc #(.V(1.2)) vin (.p(in));
+
+    // Error Amp
+    erramp #(.A0(200.0), .VREF(0.45), .TAU(0.5e-6), .VMAX(1.0)) ea (
+        .en   (en),
+        .vfb  (vfb),
+        .vctrl(vctrl)
+    );
+
+    // Pass: Controlled Current Source from Vin to Vout
+    isrc #(.GM(4.0e-3), .IMAX(5.0e-3)) pass (
+        .en     (en),
+        .control(vctrl),
+        .p      (in),
+        .n      (out),
+        .amps   (ipass)
+    );
+
+    // Rdiv
+    ldo_rdiv rdiv (.out(out), .vfb(vfb));
+
+    // Cout
+    cap_g #(.C(10.0e-9)) cout (.p(out));
+
+    // Load
+    ldo_load load (.load_hi(load_hi), .out(out));
+
+    // Voltage Sensor for vout, and the PGOOD comparator
+    vsense s_out (.p(out), .volts(vout));
+    pg_cmp_rnm cmp (.v(vout), .q(pg_cmp));
 endmodule
 
 // Rdiv: the feedback divider (vfb = vout / 2) and its voltage sensor.
