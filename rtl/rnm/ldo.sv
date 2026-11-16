@@ -49,9 +49,9 @@ module ldo_load import udn_pkg::*; (
 );
     timeunit 1ns; timeprecision 1ps;
     enet sw;
-    res_g #(.R(1.8e3)) rload  (.p(out));
-    res   #(.R(360.0)) rheavy (.p(out), .n(sw));
-    sw_g               swh    (.on(load_hi), .p(sw));
+    res_g #(.R(1.8e3))                    rload  (.p(out));
+    res   #(.R(360.0))                    rheavy (.p(out), .n(sw));
+    sw_g  #(.RON(1.0e-6), .GOFF(1.0e-12)) swh    (.on(load_hi), .p(sw));
 endmodule
 
 module ldo_rdiv import udn_pkg::*; (

@@ -38,17 +38,17 @@ endpackage
 // else is continuous.
 import udn_pkg::*;
 
-module vsrc #(parameter real V = 1.2)(inout enet p);
+module vsrc #(parameter real V)(inout enet p);
     timeunit 1ns; timeprecision 1ps;
     assign p = '{V, 0.0, 1.0e-9};
 endmodule
 
-module res_g #(parameter real R = 1000.0)(inout enet p);
+module res_g #(parameter real R)(inout enet p);
     timeunit 1ns; timeprecision 1ps;
     assign p = '{0.0, 0.0, R};
 endmodule
 
-module res #(parameter real R = 1000.0)(inout enet p, inout enet n);
+module res #(parameter real R)(inout enet p, inout enet n);
     timeunit 1ns; timeprecision 1ps;
     // Each end is driven by the other end's external Thevenin source (that
     // net's totals minus our own driver) in series with R, settling within the
@@ -87,7 +87,7 @@ module res #(parameter real R = 1000.0)(inout enet p, inout enet n);
     end
 endmodule
 
-module cap_g #(parameter real C = 10.0e-9)(inout enet p);
+module cap_g #(parameter real C)(inout enet p);
     timeunit 1ns; timeprecision 1ps;
     real history = 0.0;
     // Backward-Euler companion: history voltage in series with H/C.
@@ -95,7 +95,7 @@ module cap_g #(parameter real C = 10.0e-9)(inout enet p);
     always #STEP_NS history <= p.V;
 endmodule
 
-module sw_g #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
+module sw_g #(parameter real RON, GOFF)
     (input logic on, inout enet p);
     timeunit 1ns; timeprecision 1ps;
     assign p = '{0.0, 0.0, on ? RON : 1.0 / GOFF};
