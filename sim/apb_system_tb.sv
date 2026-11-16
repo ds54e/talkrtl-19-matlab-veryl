@@ -6,14 +6,14 @@ module apb_system_tb;
     localparam int CLK_NS = 100;
     localparam int END_NS = 50000;
 
-    logic clk = 1'b0;
+    logic clk = 1'b1;
     logic rst = 1'b0;
     wire rst_n = ~rst;
     logic load_hi = 1'b0;
     real vout, vfb, vctrl, ipass;
     logic pg_cmp, pgood, ctrl_en;
     logic [1:0] state;
-    int fd, sample_ns;
+    int fd;
     bit status_read = 1'b0;
 
     localparam logic [2:0] CTRL = 3'h0, STATUS = 3'h4;
@@ -34,25 +34,12 @@ module apb_system_tb;
         .pgood (pgood), .state (state)
     );
 
-    // Active-region model/comparator work settles before NBA clock/load changes;
-    // the supervisor then samples pg_cmp, and CSR NBAs affect the next step.
-    initial begin
-        repeat (2) begin
-            #50 clk <= 1'b1;
-            #50 clk <= 1'b0;
-        end
-        #50;
-        forever #50 clk <= ~clk;
-    end
+    // Rising edges every 100 ns; scenario time zero is at 200 ns.
+    always #50 clk <= ~clk;
 
-    // Clock edges since scenario time zero (the end of reset).
-    int tick = 0;
-    always @(posedge clk) if (!rst) tick <= tick + 1;
-
-    // Wait for the falling edge in the middle of tick n.
+    // Wait for the middle of clock period n (scenario time zero is at 200 ns).
     task automatic mid_tick(input int n);
-        wait (tick == n);
-        @(negedge clk);
+        #(250 + 100 * n - $time);
     endtask
 
     // One APB transfer: setup phase, then access phase until PREADY.
@@ -79,7 +66,7 @@ module apb_system_tb;
         apb_if.psel = 1'b0;
         apb_if.penable = 1'b0;
         rst <= 1'b1;
-        #200 rst <= 1'b0; // Scenario time zero; en=0 keeps analog derivatives zero.
+        #150 rst <= 1'b0; // After the reset edge at 100 ns.
 
         // The APB setup and access phases raise CTRL.EN at tick 20 (2 us).
         mid_tick(18);
@@ -107,9 +94,8 @@ module apb_system_tb;
         fd = $fopen("signals.csv", "w");
         $fwrite(fd, "time_ns,vout,vfb,vctrl,ipass,pg_cmp,en,load_hi,rst,state,pgood\n");
         #200;
-        for (int t_ns = 0; t_ns <= END_NS; t_ns += DT_NS) begin
-            sample_ns = t_ns;
-            $fstrobe(fd, "%0d,%.17g,%.17g,%.17g,%.17g,%0d,%0d,%0d,%0d,%0d,%0d", sample_ns,
+        repeat (END_NS / DT_NS + 1) begin
+            $fstrobe(fd, "%0d,%.17g,%.17g,%.17g,%.17g,%0d,%0d,%0d,%0d,%0d,%0d", $time - 200,
                      vout, vfb, vctrl, ipass, pg_cmp, ctrl_en, load_hi, rst, state, pgood);
             #DT_NS;
         end

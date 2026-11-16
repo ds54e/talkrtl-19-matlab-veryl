@@ -109,11 +109,6 @@ module isrc #(parameter real GM = 4.0e-3, IMAX = 5.0e-3)
     assign n = '{0.0,  amps, OPEN};
 endmodule
 
-module vsense(input enet p, output real volts);
-    timeunit 1ns; timeprecision 1ps;
-    assign volts = p.V;
-endmodule
-
 // Not a circuit element: like the Simulink blocks, a saturating gain followed
 // by a first-order lag.
 module erramp #(parameter real A0 = 200.0, VREF = 0.45, TAU = 0.5e-6, VMAX = 1.0)

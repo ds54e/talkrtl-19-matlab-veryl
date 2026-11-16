@@ -33,7 +33,7 @@ module ldo import udn_pkg::*; (
     ldo_rdiv rdiv (.out(out), .vfb(vfb));
     cap_g #(.C(10.0e-9)) cout (.p(out));
     ldo_load load (.load_hi(load_hi), .out(out));
-    vsense s_out (.p(out), .volts(vout));
+    assign vout = out.V;
     pg_cmp cmp (.v(vout), .q(pg_cmp));
 endmodule
 
@@ -42,7 +42,7 @@ module ldo_rdiv import udn_pkg::*; (inout enet out, output real vfb);
     enet fb;
     res    #(.R(100.0e3)) rtop (.p(out), .n(fb));
     res_g  #(.R(100.0e3)) rbot (.p(fb));
-    vsense                s_fb (.p(fb), .volts(vfb));
+    assign vfb = fb.V;
 endmodule
 
 // While load_hi, Rheavy is in parallel with Rload: 1.8 k || 360 = 300 ohm.
