@@ -22,57 +22,37 @@ module ldo_rnm #(
     timeunit 1ns;
     timeprecision 1ps;
 
-    localparam real RDIV = RTOP + RBOT;
-    // Each 10 ns step uses 100 explicit Euler substeps.
-    localparam int FE_SUBSTEPS = 100;
+    import udn_pkg::*;
 
-    real vout_q;
-    real vctrl_q;
+    enet vin_node, vout_node, vfb_node, switch_node;
+    real pass_amps;
+    // Preserve the effective-heavy-load parameter: 1800 || 360 = 300 ohm.
+    localparam real RHEAVY = 1.0 / (1.0 / RL_HEAVY - 1.0 / RL_NORMAL);
 
-    pg_cmp_rnm u_cmp (.v(vout), .q(pg_cmp));
+    udn_voltage_source #(.V(1.2)) u_vin (vin_node); // Vin: DC Voltage Source
+    udn_current_source #(.GM(GM_PASS), .IMAX(IMAX)) u_pass
+        (en, vctrl, vin_node, vout_node, pass_amps); // Pass: Controlled Current Source
+    udn_resistor #(.R(RTOP)) u_rtop (vout_node, vfb_node); // Rdiv: Rtop
+    udn_ground_resistor #(.R(RBOT)) u_rbot (vfb_node); // Rdiv: Rbot
+    udn_capacitor #(.C(COUT)) u_cout (vout_node); // Cout
+    udn_ground_resistor #(.R(RL_NORMAL)) u_rload (vout_node); // Load: Rload
+    udn_resistor #(.R(RHEAVY)) u_rheavy (vout_node, switch_node); // Load: Rheavy
+    udn_ground_switch u_switch (load_hi, switch_node); // Load: Switch to ground
+    udn_voltage_sensor u_vout (vout_node, vout); // Vout Voltage Sensor
+    udn_voltage_sensor u_vfb (vfb_node, vfb); // Vfb Voltage Sensor
+    udn_current_sensor u_ipass (pass_amps, ipass); // Pass Current Sensor
 
-    function automatic real clip(input real x, input real lo, input real hi);
-        return x < lo ? lo : (x > hi ? hi : x);
-    endfunction
-
-    function automatic real pass_current(input real vc);
-        return en ? clip(GM_PASS * vc, 0.0, IMAX) : 0.0;
-    endfunction
-
-    task automatic deriv(input real v, input real vc, output real dvout, output real dvctrl);
-        real rload = load_hi ? RL_HEAVY : RL_NORMAL;
-        // Saturation precedes the EA lag.
-        real vc_target = clip(A0 * (en ? 1.0 : 0.0) * (VREF - v * (RBOT / RDIV)), 0.0, VC_MAX);
-        dvctrl = (vc_target - vc) / TAU_EA;
-        // Divider current is explicit here; Simscape gets it from the resistor network.
-        dvout = (pass_current(vc) - v / rload - v / RDIV) / COUT;
-    endtask
-
-    task automatic drive_outputs();
-        vout  = vout_q;
-        vfb   = vout_q * (RBOT / RDIV);
-        vctrl = vctrl_q;
-        ipass = pass_current(vctrl_q);
-    endtask
-
-    // Both derivatives use the same pre-update state.
-    task automatic step(input real h);
-        real dt = h / FE_SUBSTEPS;
-        real dv, dvc;
-        for (int k = 0; k < FE_SUBSTEPS; k++) begin
-            deriv(vout_q, vctrl_q, dv, dvc);
-            vout_q  = vout_q  + dt * dv;
-            vctrl_q = vctrl_q + dt * dvc;
-        end
-        drive_outputs();
-    endtask
-
-    // Analog state is cleared only on cold start; digital reset does not touch it.
-    initial begin
-        vout_q  = 0.0;
-        vctrl_q = 0.0;
-        drive_outputs();
+    // Error Amp: Simulink saturation followed by a first-order lag.
+    real vc = 0.0, next_vc;
+    assign vctrl = vc;
+    initial forever begin
+        #0.001;
+        next_vc = vc + H / TAU_EA * (clip(A0 * (en ? 1.0 : 0.0) *
+                                        (VREF - vfb), 0.0, VC_MAX) - vc);
+        #0.001;
+        vc = next_vc;
+        #(STEP_NS - 0.002);
     end
 
-    always #10 step(10e-9);
+    pg_cmp_rnm u_cmp (.v(vout), .q(pg_cmp));
 endmodule
