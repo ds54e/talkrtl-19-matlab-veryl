@@ -32,11 +32,9 @@ package udn_pkg;
 endpackage
 
 // All grounded elements use the implicit electrical reference (0 V).
-// Each step, at t + 1 ps (after the testbench's nonblocking updates at t), the
-// dynamic elements read the settled nets and update their state with
-// nonblocking assignments, so none sees another's new state within the step
-// and process order cannot matter. Sensors publish at t + 2 ps, after the nets
-// settle. STEP_NS must exceed 2 ps and divide the 10 ns grid.
+// Only the dynamic elements (capacitor, error amplifier) step in time: every
+// STEP_NS they update their state with nonblocking assignments, so none sees
+// another's new state within the step. Everything else is continuous.
 import udn_pkg::*;
 
 module vsrc #(parameter real V = 1.2)(inout enet p);
@@ -93,23 +91,13 @@ module cap_g #(parameter real C = 10.0e-9)(inout enet p);
     real history = 0.0;
     // Backward-Euler companion: history voltage in series with H/C.
     assign p = '{history, 0.0, H / C};
-    initial forever begin
-        #0.001 history <= p.V;
-        #(STEP_NS - 0.001);
-    end
+    always #STEP_NS history <= p.V;
 endmodule
 
 module sw_g #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
     (input logic on, inout enet p);
     timeunit 1ns; timeprecision 1ps;
-    // Switch together with the capacitor's update. Switching at once would apply
-    // the new load to the step already being solved, one step before Simscape.
-    real r = 1.0 / GOFF;
-    assign p = '{0.0, 0.0, r};
-    initial forever begin
-        #0.001 r <= on ? RON : 1.0 / GOFF;
-        #(STEP_NS - 0.001);
-    end
+    assign p = '{0.0, 0.0, on ? RON : 1.0 / GOFF};
 endmodule
 
 module isrc #(parameter real GM = 4.0e-3, IMAX = 5.0e-3)
@@ -123,25 +111,15 @@ endmodule
 
 module vsense(input enet p, output real volts);
     timeunit 1ns; timeprecision 1ps;
-    initial begin
-        volts = 0.0;
-        forever begin
-            #0.002;
-            volts = p.V;
-            #(STEP_NS - 0.002);
-        end
-    end
+    assign volts = p.V;
 endmodule
 
 // Not a circuit element: like the Simulink blocks, a saturating gain followed
-// by a first-order lag, stepped with the same snapshot/commit timing.
+// by a first-order lag.
 module erramp #(parameter real A0 = 200.0, VREF = 0.45, TAU = 0.5e-6, VMAX = 1.0)
     (input logic en, input real vfb, output real vctrl);
     timeunit 1ns; timeprecision 1ps;
     real vc = 0.0;
     assign vctrl = vc;
-    initial forever begin
-        #0.001 vc <= vc + H / TAU * (clip(A0 * (en ? 1.0 : 0.0) * (VREF - vfb), 0.0, VMAX) - vc);
-        #(STEP_NS - 0.001);
-    end
+    always #STEP_NS vc <= vc + H / TAU * (clip(A0 * (en ? 1.0 : 0.0) * (VREF - vfb), 0.0, VMAX) - vc);
 endmodule

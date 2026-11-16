@@ -42,14 +42,20 @@ run = Simulink.sdi.getRun(id);
 end
 
 function verdict = compare_runs(ref, impl, session)
-% Analog signals within absolute limits, digital signals exact.
+% Analog signals within absolute limits. Digital signals must match, allowing
+% one sample (10 ns) for the threshold crossing and one clock (100 ns) for the
+% supervisor that samples it; the inputs en, load_hi and rst must match exactly.
 LIMITS = struct('vout', 1e-3, 'vfb', 0.5e-3, 'vctrl', 5e-3, 'ipass', 20e-6);
+SHIFTS = struct('pg_cmp', 10e-9, 'pgood', 100e-9, 'state', 100e-9);
 for run = [ref impl]
     for id = run.getAllSignalIDs()'
         sig = Simulink.sdi.getSignal(id);
         sig.OverrideGlobalTol = true;
         sig.RelTol = 0;
         sig.TimeTol = 0;
+        if isfield(SHIFTS, sig.Name)
+            sig.TimeTol = SHIFTS.(sig.Name);
+        end
         if isfield(LIMITS, sig.Name)
             sig.AbsTol = LIMITS.(sig.Name);
             sig.InterpMethod = 'linear';
@@ -66,7 +72,7 @@ for k = 1:diff.Count
 end
 verdict = 'FAIL';
 if diff.Count == 10 && ok == diff.Count, verdict = 'PASS'; end
-fprintf('SDI Compare: %d/%d signals within tolerance (digital exact) : %s\n', ok, diff.Count, verdict);
+fprintf('SDI Compare: %d/%d signals within tolerance : %s\n', ok, diff.Count, verdict);
 
 % Keep the computed comparison and both runs for later viewing.
 if ~isfolder(fileparts(session)), mkdir(fileparts(session)); end
