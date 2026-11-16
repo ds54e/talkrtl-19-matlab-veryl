@@ -23,98 +23,55 @@ module ldo_rnm #(
     timeprecision 1ps;
 
     localparam real RDIV = RTOP + RBOT;
-    // Nominal 10 ns macro-step uses 100 explicit Euler substeps.
+    // Each 10 ns step uses 100 explicit Euler substeps.
     localparam int FE_SUBSTEPS = 100;
 
     real vout_q;
     real vctrl_q;
 
-    real vfb_q;
-    real ipass_q;
-
     pg_cmp_rnm u_cmp (.v(vout), .q(pg_cmp));
 
-    task automatic deriv(
-        input  real  v,
-        input  real  vc,
-        input  logic en_i,
-        input  logic load_hi_i,
-        output real  dvout,
-        output real  dvctrl
-    );
-        real en_r;
-        real rload;
-        real fbv;
-        real vc_target;
-        real ip;
+    function automatic real clip(input real x, input real lo, input real hi);
+        return x < lo ? lo : (x > hi ? hi : x);
+    endfunction
 
-        en_r  = en_i ? 1.0 : 0.0;
-        rload = load_hi_i ? RL_HEAVY : RL_NORMAL;
+    function automatic real pass_current(input real vc);
+        return en ? clip(GM_PASS * vc, 0.0, IMAX) : 0.0;
+    endfunction
 
-        fbv = v * (RBOT / RDIV);
-
+    task automatic deriv(input real v, input real vc, output real dvout, output real dvctrl);
+        real rload = load_hi ? RL_HEAVY : RL_NORMAL;
         // Saturation precedes the EA lag.
-        vc_target = A0 * en_r * (VREF - fbv);
-        if (vc_target < 0.0) begin
-            vc_target = 0.0;
-        end else if (vc_target > VC_MAX) begin
-            vc_target = VC_MAX;
-        end
+        real vc_target = clip(A0 * (en ? 1.0 : 0.0) * (VREF - v * (RBOT / RDIV)), 0.0, VC_MAX);
         dvctrl = (vc_target - vc) / TAU_EA;
-
-        ip = GM_PASS * vc;
-        if (ip < 0.0) begin
-            ip = 0.0;
-        end else if (ip > IMAX) begin
-            ip = IMAX;
-        end
-        if (!en_i) begin
-            ip = 0.0;
-        end
-
         // Divider current is explicit here; Simscape gets it from the resistor network.
-        dvout = (ip - v / rload - v / RDIV) / COUT;
+        dvout = (pass_current(vc) - v / rload - v / RDIV) / COUT;
     endtask
 
-    task automatic observe();
-        localparam real EN_ONE = 1.0;
-        real ip;
-        vfb_q = vout_q * (RBOT / RDIV);
-        ip    = GM_PASS * vctrl_q;
-        if (ip < 0.0) begin
-            ip = 0.0;
-        end else if (ip > IMAX) begin
-            ip = IMAX;
-        end
-        ipass_q = (en ? EN_ONE : 0.0) * ip;
-        vout    = vout_q;
-        vfb     = vfb_q;
-        vctrl   = vctrl_q;
-        ipass   = ipass_q;
+    task automatic drive_outputs();
+        vout  = vout_q;
+        vfb   = vout_q * (RBOT / RDIV);
+        vctrl = vctrl_q;
+        ipass = pass_current(vctrl_q);
     endtask
 
     // Both derivatives use the same pre-update state.
     task automatic step(input real h);
-        real dt;
-        real dv;
-        real dvc;
-
-        dt = h / FE_SUBSTEPS;
-
-        for (int k = 0; k < FE_SUBSTEPS; k = k + 1) begin
-            deriv(vout_q, vctrl_q, en, load_hi, dv, dvc);
+        real dt = h / FE_SUBSTEPS;
+        real dv, dvc;
+        for (int k = 0; k < FE_SUBSTEPS; k++) begin
+            deriv(vout_q, vctrl_q, dv, dvc);
             vout_q  = vout_q  + dt * dv;
             vctrl_q = vctrl_q + dt * dvc;
         end
-
-        observe();
+        drive_outputs();
     endtask
 
     // Analog state is cleared only on cold start; digital reset does not touch it.
     initial begin
         vout_q  = 0.0;
         vctrl_q = 0.0;
-        observe();
+        drive_outputs();
     end
 
     always #10 step(10e-9);
