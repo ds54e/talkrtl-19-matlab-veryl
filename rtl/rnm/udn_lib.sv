@@ -2,7 +2,7 @@
 package udn_pkg;
     timeunit 1ns;
     timeprecision 1ps;
-    parameter real STEP_NS = 0.2;
+    parameter real STEP_NS = 1.25;
     parameter real H = STEP_NS * 1.0e-9;
     parameter real OPEN = 1.0e30;
     typedef struct { real V; real I; real R; } electrical;
@@ -51,16 +51,43 @@ endmodule
 
 module res #(parameter real R = 1000.0)(inout enet p, inout enet n);
     timeunit 1ns; timeprecision 1ps;
-    real vp = 0.0, vn = 0.0, sp, sn;
-    // Each end sees the other end's voltage from the previous step.
-    assign p = '{vn, 0.0, R};
-    assign n = '{vp, 0.0, R};
-    initial forever begin
-        #0.001;
-        sp = p.V; sn = n.V;
-        #0.001;
-        vp = sp; vn = sn;
-        #(STEP_NS - 0.002);
+    electrical dp = '{0.0, 0.0, OPEN}, dn = '{0.0, 0.0, OPEN};
+    electrical next_p, next_n;
+    assign p = dp;
+    assign n = dn;
+
+    // Subtract our driver to see the external Thevenin source, then add R.
+    // Cancellation loses precision for widely separated conductances; neither
+    // resistor in this LDO touches the ideal-source node (R = 1e-9).
+    function automatic electrical through(input electrical net_value, input electrical own);
+        real g, s;
+        g = net_value.R > 0.0 && net_value.R < OPEN ? 1.0 / net_value.R : 0.0;
+        s = net_value.I - own.I;
+        if (own.R > 0.0 && own.R < OPEN) begin
+            g -= 1.0 / own.R;
+            s -= own.V / own.R;
+        end
+        return g > 0.0 ? electrical'{s / g, 0.0, R + 1.0 / g}
+                       : electrical'{0.0, 0.0, OPEN};
+    endfunction
+
+    function automatic bit changed(input real a, input real b);
+        real delta, scale;
+        delta = a > b ? a - b : b - a;
+        scale = 1.0e-3 + (a < 0.0 ? -a : a) + (b < 0.0 ? -b : b);
+        return delta > 1.0e-12 * scale;
+    endfunction
+
+    always_comb begin
+        next_p = through(n, dn);
+        next_n = through(p, dp);
+        // Compare Norton contributions, retaining sub-tolerance drivers to stop
+        // roundoff ping-pong: 1e-12 relative, with 1 fA / 1 fS absolute floors.
+        // A noisy external voltage behind an almost-open R is insignificant.
+        if (changed(next_p.V / next_p.R, dp.V / dp.R) ||
+            changed(1.0 / next_p.R, 1.0 / dp.R)) dp = next_p;
+        if (changed(next_n.V / next_n.R, dn.V / dn.R) ||
+            changed(1.0 / next_n.R, 1.0 / dn.R)) dn = next_n;
     end
 endmodule
 
