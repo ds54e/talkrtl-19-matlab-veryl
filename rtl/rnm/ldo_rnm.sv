@@ -1,16 +1,6 @@
-module ldo_rnm #(
-    parameter real VREF      = 0.45,
-    parameter real RTOP      = 100.0e3,
-    parameter real RBOT      = 100.0e3,
-    parameter real COUT      = 10.0e-9,
-    parameter real RL_NORMAL = 1.8e3,
-    parameter real RL_HEAVY  = 300.0,
-    parameter real A0        = 200.0,
-    parameter real TAU_EA    = 0.5e-6,
-    parameter real GM_PASS   = 4.0e-3,
-    parameter real IMAX      = 5.0e-3,
-    parameter real VC_MAX    = 1.0
-) (
+// SV-RNM LDO on UDN nets: the same blocks as the Simscape "Analog LDO"
+// subsystem, with the values from CONTRACT.md.
+module ldo_rnm import udn_pkg::*; (
     input  logic en,
     input  logic load_hi,
     output real  vout,
@@ -22,41 +12,33 @@ module ldo_rnm #(
     timeunit 1ns;
     timeprecision 1ps;
 
-    import udn_pkg::*;
-
-    // Same blocks as the Simscape "Analog LDO" subsystem.
     enet in, out;
-    // Rheavy is switched in parallel with Rload: 1800 || 360 = 300 ohm.
-    localparam real RHEAVY = 1.0 / (1.0 / RL_HEAVY - 1.0 / RL_NORMAL);
 
-    vsrc     #(.V(1.2))                    vin   (in);                         // Vin
-    erramp   #(.A0(A0), .VREF(VREF), .TAU(TAU_EA), .VMAX(VC_MAX))
-                                           ea    (en, vfb, vctrl);             // Error Amp
-    isrc     #(.GM(GM_PASS), .IMAX(IMAX))  pass  (en, vctrl, in, out, ipass);  // Pass
-    ldo_rdiv #(.RTOP(RTOP), .RBOT(RBOT))   rdiv  (out, vfb);                   // Rdiv
-    cap_g    #(.C(COUT))                   cout  (out);                        // Cout
-    ldo_load #(.RL(RL_NORMAL), .RHEAVY(RHEAVY))
-                                           load  (load_hi, out);               // Load
-    vsense                                 s_out (out, vout);                  // Vsense_vout
-    pg_cmp_rnm                             cmp   (.v(vout), .q(pg_cmp));       // pg_cmp
+    vsrc   #(.V(1.2))                    vin   (in);                         // Vin
+    erramp #(.A0(200.0), .VREF(0.45), .TAU(0.5e-6), .VMAX(1.0))
+                                         ea    (en, vfb, vctrl);             // Error Amp
+    isrc   #(.GM(4.0e-3), .IMAX(5.0e-3)) pass  (en, vctrl, in, out, ipass);  // Pass
+    ldo_rdiv                             rdiv  (out, vfb);                   // Rdiv
+    cap_g  #(.C(10.0e-9))                cout  (out);                        // Cout
+    ldo_load                             load  (load_hi, out);               // Load
+    vsense                               s_out (out, vout);                  // Vsense_vout
+    pg_cmp_rnm                           cmp   (.v(vout), .q(pg_cmp));       // pg_cmp
 endmodule
 
-// Rdiv: the feedback divider and its voltage sensor.
-module ldo_rdiv import udn_pkg::*; #(parameter real RTOP = 100.0e3, RBOT = 100.0e3)
-    (inout enet out, output real vfb);
+// Rdiv: the feedback divider (vfb = vout / 2) and its voltage sensor.
+module ldo_rdiv import udn_pkg::*; (inout enet out, output real vfb);
     timeunit 1ns; timeprecision 1ps;
     enet fb;
-    res    #(.R(RTOP)) rtop (out, fb);
-    res_g  #(.R(RBOT)) rbot (fb);
-    vsense             s_fb (fb, vfb);
+    res    #(.R(100.0e3)) rtop (out, fb);
+    res_g  #(.R(100.0e3)) rbot (fb);
+    vsense                s_fb (fb, vfb);
 endmodule
 
-// Load: Rload, plus Rheavy switched to ground while load_hi is high.
-module ldo_load import udn_pkg::*; #(parameter real RL = 1.8e3, RHEAVY = 360.0)
-    (input logic load_hi, inout enet out);
+// Load: Rload, plus Rheavy switched in while load_hi (1.8 k || 360 = 300 ohm).
+module ldo_load import udn_pkg::*; (input logic load_hi, inout enet out);
     timeunit 1ns; timeprecision 1ps;
     enet sw;
-    res_g #(.R(RL))     rload  (out);
-    res   #(.R(RHEAVY)) rheavy (out, sw);
-    sw_g                swh    (load_hi, sw);
+    res_g #(.R(1.8e3)) rload  (out);
+    res   #(.R(360.0)) rheavy (out, sw);
+    sw_g               swh    (load_hi, sw);
 endmodule
