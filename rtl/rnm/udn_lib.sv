@@ -39,17 +39,17 @@ endpackage
 // STEP_NS must exceed 3 ps and divide the 10 ns grid.
 import udn_pkg::*;
 
-module udn_voltage_source #(parameter real V = 1.2)(inout enet p);
+module vsrc #(parameter real V = 1.2)(inout enet p);
     timeunit 1ns; timeprecision 1ps;
     assign p = '{V, 0.0, 1.0e-9};
 endmodule
 
-module udn_ground_resistor #(parameter real R = 1000.0)(inout enet p);
+module res_g #(parameter real R = 1000.0)(inout enet p);
     timeunit 1ns; timeprecision 1ps;
     assign p = '{0.0, 0.0, R};
 endmodule
 
-module udn_resistor #(parameter real R = 1000.0)(inout enet p, inout enet n);
+module res #(parameter real R = 1000.0)(inout enet p, inout enet n);
     timeunit 1ns; timeprecision 1ps;
     real vp = 0.0, vn = 0.0, sp, sn;
     // Each end sees the other end's voltage from the previous step.
@@ -64,7 +64,7 @@ module udn_resistor #(parameter real R = 1000.0)(inout enet p, inout enet n);
     end
 endmodule
 
-module udn_capacitor #(parameter real C = 10.0e-9)(inout enet p);
+module cap_g #(parameter real C = 10.0e-9)(inout enet p);
     timeunit 1ns; timeprecision 1ps;
     real history = 0.0, snapshot;
     // Backward-Euler companion: history voltage in series with H/C.
@@ -78,7 +78,7 @@ module udn_capacitor #(parameter real C = 10.0e-9)(inout enet p);
     end
 endmodule
 
-module udn_ground_switch #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
+module sw_g #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
     (input logic on, inout enet p);
     timeunit 1ns; timeprecision 1ps;
     real r = 1.0 / GOFF, next_r;
@@ -92,7 +92,7 @@ module udn_ground_switch #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
     end
 endmodule
 
-module udn_current_source #(parameter real GM = 4.0e-3, IMAX = 5.0e-3)
+module isrc #(parameter real GM = 4.0e-3, IMAX = 5.0e-3)
     (input logic en, input real control, inout enet p, inout enet n,
      output real amps);
     timeunit 1ns; timeprecision 1ps;
@@ -109,7 +109,7 @@ module udn_current_source #(parameter real GM = 4.0e-3, IMAX = 5.0e-3)
     end
 endmodule
 
-module udn_voltage_sensor(input enet p, output real volts);
+module vsense(input enet p, output real volts);
     timeunit 1ns; timeprecision 1ps;
     initial begin
         volts = 0.0;
@@ -121,9 +121,18 @@ module udn_voltage_sensor(input enet p, output real volts);
     end
 endmodule
 
-// An ideal current source's branch current is exactly its commanded current.
-// Probe that current directly: the resolved node's .I is a Norton sum.
-module udn_current_sensor(input real branch_amps, output real amps);
+// Error Amp. Not a circuit element: like the Simulink blocks, a saturating gain
+// followed by a first-order lag, stepped with the same snapshot/commit timing.
+module erramp #(parameter real A0 = 200.0, VREF = 0.45, TAU = 0.5e-6, VMAX = 1.0)
+    (input logic en, input real vfb, output real vctrl);
     timeunit 1ns; timeprecision 1ps;
-    assign amps = branch_amps;
+    real vc = 0.0, next_vc;
+    assign vctrl = vc;
+    initial forever begin
+        #0.001;
+        next_vc = vc + H / TAU * (clip(A0 * (en ? 1.0 : 0.0) * (VREF - vfb), 0.0, VMAX) - vc);
+        #0.001;
+        vc = next_vc;
+        #(STEP_NS - 0.002);
+    end
 endmodule
