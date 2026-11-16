@@ -32,11 +32,11 @@ package udn_pkg;
 endpackage
 
 // All grounded elements use the implicit electrical reference (0 V).
-// At t + 1 ps snapshot the settled state and post-NBA inputs; at t + 2 ps
-// commit the next state. It is then held through the boundary t + STEP_NS.
-// Snapshots never read another element's pending value, so process order
-// cannot affect a step. Sensors publish at +3 ps, after resolution settles.
-// STEP_NS must exceed 3 ps and divide the 10 ns grid.
+// Each step, at t + 1 ps (after the testbench's nonblocking updates at t), the
+// dynamic elements read the settled nets and update their state with
+// nonblocking assignments, so none sees another's new state within the step
+// and process order cannot matter. Sensors publish at t + 2 ps, after the nets
+// settle. STEP_NS must exceed 2 ps and divide the 10 ns grid.
 import udn_pkg::*;
 
 module vsrc #(parameter real V = 1.2)(inout enet p);
@@ -90,31 +90,25 @@ endmodule
 
 module cap_g #(parameter real C = 10.0e-9)(inout enet p);
     timeunit 1ns; timeprecision 1ps;
-    real history = 0.0, snapshot;
+    real history = 0.0;
     // Backward-Euler companion: history voltage in series with H/C.
     assign p = '{history, 0.0, H / C};
     initial forever begin
-        #0.001;
-        snapshot = p.V;
-        #0.001;
-        history = snapshot;
-        #(STEP_NS - 0.002);
+        #0.001 history <= p.V;
+        #(STEP_NS - 0.001);
     end
 endmodule
 
 module sw_g #(parameter real RON = 1.0e-6, GOFF = 1.0e-12)
     (input logic on, inout enet p);
     timeunit 1ns; timeprecision 1ps;
-    // Switch in step with the capacitor's commit. Switching at once would apply
+    // Switch together with the capacitor's update. Switching at once would apply
     // the new load to the step already being solved, one step before Simscape.
-    real r = 1.0 / GOFF, next_r;
+    real r = 1.0 / GOFF;
     assign p = '{0.0, 0.0, r};
     initial forever begin
-        #0.001;
-        next_r = on ? RON : 1.0 / GOFF;
-        #0.001;
-        r = next_r;
-        #(STEP_NS - 0.002);
+        #0.001 r <= on ? RON : 1.0 / GOFF;
+        #(STEP_NS - 0.001);
     end
 endmodule
 
@@ -132,9 +126,9 @@ module vsense(input enet p, output real volts);
     initial begin
         volts = 0.0;
         forever begin
-            #0.003;
+            #0.002;
             volts = p.V;
-            #(STEP_NS - 0.003);
+            #(STEP_NS - 0.002);
         end
     end
 endmodule
@@ -144,13 +138,10 @@ endmodule
 module erramp #(parameter real A0 = 200.0, VREF = 0.45, TAU = 0.5e-6, VMAX = 1.0)
     (input logic en, input real vfb, output real vctrl);
     timeunit 1ns; timeprecision 1ps;
-    real vc = 0.0, next_vc;
+    real vc = 0.0;
     assign vctrl = vc;
     initial forever begin
-        #0.001;
-        next_vc = vc + H / TAU * (clip(A0 * (en ? 1.0 : 0.0) * (VREF - vfb), 0.0, VMAX) - vc);
-        #0.001;
-        vc = next_vc;
-        #(STEP_NS - 0.002);
+        #0.001 vc <= vc + H / TAU * (clip(A0 * (en ? 1.0 : 0.0) * (VREF - vfb), 0.0, VMAX) - vc);
+        #(STEP_NS - 0.001);
     end
 endmodule
